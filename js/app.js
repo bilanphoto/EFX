@@ -105,10 +105,18 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Auto-Save UI Indicator & Reset Buttons
   const saveStatusBadge = document.getElementById('save-status-badge');
+  const menuSaveDot = document.getElementById('menu-save-dot');
   const resetPresetBtn = document.getElementById('reset-preset-btn');
   const resetRigBtn = document.getElementById('reset-rig-btn');
 
   chainState.onSaveStatus = (status) => {
+    if (menuSaveDot) {
+      if (status === 'saving') {
+        menuSaveDot.className = 'menu-live-dot saving';
+      } else if (status === 'saved') {
+        menuSaveDot.className = 'menu-live-dot saved';
+      }
+    }
     if (!saveStatusBadge) return;
     if (status === 'saving') {
       saveStatusBadge.className = 'save-status-badge saving';
@@ -315,6 +323,45 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (headerDockBtn) {
     headerDockBtn.addEventListener('click', () => {
       setDockOpen(!isDockOpen);
+    });
+  }
+
+  // Studio Tools & Settings Dropdown Menu (Toggle & Click Outside)
+  const studioMenuBtn = document.getElementById('studio-menu-btn');
+  const studioMenuDropdown = document.getElementById('studio-menu-dropdown');
+
+  if (studioMenuBtn && studioMenuDropdown) {
+    studioMenuBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = studioMenuDropdown.classList.contains('open');
+      if (isOpen) {
+        studioMenuDropdown.classList.remove('open');
+        studioMenuBtn.classList.remove('active');
+      } else {
+        studioMenuDropdown.classList.add('open');
+        studioMenuBtn.classList.add('active');
+      }
+    });
+
+    // Prevent interactions inside the menu (fader adjustment, tuner button, etc.) from closing the menu
+    studioMenuDropdown.addEventListener('click', (e) => {
+      e.stopPropagation();
+    });
+
+    // Close when clicking anywhere outside
+    document.addEventListener('click', () => {
+      if (studioMenuDropdown.classList.contains('open')) {
+        studioMenuDropdown.classList.remove('open');
+        studioMenuBtn.classList.remove('active');
+      }
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && studioMenuDropdown.classList.contains('open')) {
+        studioMenuDropdown.classList.remove('open');
+        studioMenuBtn.classList.remove('active');
+      }
     });
   }
 

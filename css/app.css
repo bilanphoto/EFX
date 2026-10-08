@@ -128,11 +128,6 @@ body.studio-app {
 }
 
 /* Tuner Box & Header Dock Toggle */
-.header-center {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
 
 .header-dock-btn {
   display: flex;
@@ -278,11 +273,184 @@ body.studio-app {
   box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
 }
 
-/* Master Volume & Levels & Auto-Save */
+/* Studio Tools Dropdown Menu & Settings */
 .header-right {
   display: flex;
   align-items: center;
-  gap: 16px;
+}
+
+.studio-menu-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.studio-menu-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: linear-gradient(180deg, #2c333f 0%, #1a1e26 100%);
+  border: 1px solid #475569;
+  border-radius: 4px;
+  color: #e2e8f0;
+  padding: 5px 11px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  user-select: none;
+}
+
+.studio-menu-btn:hover {
+  background: linear-gradient(180deg, #374151 0%, #232936 100%);
+  border-color: #60a5fa;
+  color: #ffffff;
+}
+
+.studio-menu-btn.active {
+  background: linear-gradient(180deg, #374151 0%, #1f2937 100%);
+  border-color: var(--accent-gold);
+  color: #fef08a;
+  box-shadow: 0 0 10px rgba(229, 169, 60, 0.4);
+}
+
+.menu-icon {
+  font-size: 12px;
+  line-height: 1;
+}
+
+.menu-label {
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+.menu-live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 6px #10b981;
+  transition: all 0.2s ease;
+}
+
+.menu-live-dot.saving {
+  background: #f59e0b;
+  box-shadow: 0 0 6px #f59e0b;
+  animation: pulseDot 0.6s infinite alternate;
+}
+
+.menu-arrow {
+  font-size: 8px;
+  color: #94a3b8;
+  transition: transform 0.2s ease;
+}
+
+.studio-menu-btn.active .menu-arrow {
+  transform: rotate(180deg);
+  color: var(--accent-gold);
+}
+
+/* Dropdown Menu Panel */
+.studio-menu-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 290px;
+  background: #0f1318;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 10px;
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  z-index: 1000;
+  animation: menuDropFade 0.15s ease-out;
+}
+
+.studio-menu-dropdown.open {
+  display: flex;
+}
+
+@keyframes menuDropFade {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.menu-section {
+  background: #161b22;
+  border: 1px solid #242c38;
+  border-radius: 5px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.menu-section-title {
+  font-size: 8.5px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #94a3b8;
+  text-transform: uppercase;
+  border-bottom: 1px solid #212936;
+  padding-bottom: 3px;
+}
+
+.menu-vol-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.menu-vol-row .vol-control {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.menu-vol-row .mini-fader {
+  width: 75px;
+}
+
+.menu-section .tuner-box {
+  width: 100%;
+  justify-content: space-between;
+  padding: 4px 8px;
+  gap: 6px;
+}
+
+.menu-section .header-dock-btn {
+  width: 100%;
+  justify-content: center;
+  padding: 6px 10px;
+}
+
+.menu-save-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.menu-actions-row {
+  display: flex;
+  gap: 6px;
+}
+
+.menu-actions-row .reset-rig-btn {
+  flex: 1;
+  text-align: center;
+  padding: 5px 4px;
 }
 
 .save-status-wrap {
@@ -847,3 +1015,42 @@ body.studio-app {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
 }
+
+/* Responsive Header & Studio Menu */
+@media (max-width: 680px) {
+  .master-header {
+    padding: 0 10px;
+    height: 50px;
+  }
+  .header-left {
+    gap: 10px;
+  }
+  .brand-title {
+    font-size: 12px;
+    letter-spacing: 1px;
+  }
+  .brand-sub {
+    font-size: 7px;
+  }
+  .snap-presets-container {
+    padding: 2px 6px;
+    gap: 4px;
+  }
+  .snap-label {
+    display: none;
+  }
+  .snap-preset-btn {
+    width: 22px;
+    height: 22px;
+    font-size: 9.5px;
+  }
+  .studio-menu-btn {
+    padding: 4px 8px;
+    font-size: 10px;
+  }
+  .studio-menu-dropdown {
+    width: 270px;
+    right: -4px;
+  }
+}
+

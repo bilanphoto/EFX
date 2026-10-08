@@ -35,48 +35,75 @@
       </div>
     </div>
 
-    <!-- Chromatic Tuner & Bottom Dock Toggle -->
-    <div class="header-center">
-      <div class="tuner-box" id="tuner-display">
-        <div class="tuner-scale">
-          <span class="flat-mark">♭</span>
-          <div class="tuner-meter">
-            <div class="tuner-center-line"></div>
-            <div class="tuner-needle" id="tuner-needle"></div>
-          </div>
-          <span class="sharp-mark">♯</span>
-        </div>
-        <div class="tuner-readout">
-          <span class="tuner-note" id="tuner-note">--</span>
-          <span class="tuner-cents" id="tuner-cents">0¢</span>
-        </div>
-        <button class="tuner-btn" id="tuner-toggle-btn">TUNER</button>
-      </div>
-
-      <button class="header-dock-btn active" id="header-dock-btn" title="สวิตช์เปิด/ปิด แถบเล่นกีตาร์และจอมอนิเตอร์ด้านล่าง (Toggle Bottom Dock)">
-        <span class="dock-btn-led"></span>
-        <span class="dock-btn-text">BOTTOM DOCK</span>
-      </button>
-    </div>
-
-    <!-- Master Levels & I/O -->
+    <!-- Studio Tools & Settings Dropdown Menu (Consolidates Tuner, Levels, Dock, Reset) -->
     <div class="header-right">
-      <div class="save-status-wrap">
-        <div class="save-status-badge saved" id="save-status-badge" title="ระบบบันทึกค่าการตั้งค่าทุกอย่างโดยอัตโนมัติ">
-          <span class="save-dot">●</span> <span class="save-text">AUTO-SAVED</span>
-        </div>
-        <button class="reset-rig-btn reset-preset-btn" id="reset-preset-btn" title="รีเซ็ตพรีเซ็ตปัจจุบันกลับเป็นค่าเริ่มต้นโรงงาน (Reset Current Preset)">RESET PRESET</button>
-        <button class="reset-rig-btn reset-all-btn" id="reset-rig-btn" title="รีเซ็ตทุกพรีเซ็ตกลับเป็นค่าเริ่มต้นโรงงาน (Reset All Presets)">RESET ALL</button>
-      </div>
+      <div class="studio-menu-container">
+        <button class="studio-menu-btn" id="studio-menu-btn" title="เครื่องมือและการตั้งค่าสตูดิโอ (Tools & Studio Settings)">
+          <span class="menu-icon">⚙️</span>
+          <span class="menu-label">MENU</span>
+          <span class="menu-live-dot" id="menu-save-dot" title="สถานะบันทึกอัตโนมัติ"></span>
+          <span class="menu-arrow">▼</span>
+        </button>
 
-      <div class="io-volume-strip">
-        <div class="vol-control">
-          <label for="input-volume">IN</label>
-          <input type="range" id="input-volume" min="0" max="2.5" step="0.05" value="1.0" class="mini-fader">
-        </div>
-        <div class="vol-control">
-          <label for="master-volume">MASTER</label>
-          <input type="range" id="master-volume" min="0" max="1.5" step="0.05" value="0.85" class="mini-fader">
+        <!-- Dropdown Menu Panel -->
+        <div class="studio-menu-dropdown" id="studio-menu-dropdown">
+          <!-- 1. Volume & Output Levels -->
+          <div class="menu-section">
+            <div class="menu-section-title">AUDIO LEVELS</div>
+            <div class="menu-vol-row">
+              <div class="vol-control">
+                <label for="input-volume">IN</label>
+                <input type="range" id="input-volume" min="0" max="2.5" step="0.05" value="1.0" class="mini-fader">
+              </div>
+              <div class="vol-control">
+                <label for="master-volume">MASTER</label>
+                <input type="range" id="master-volume" min="0" max="1.5" step="0.05" value="0.85" class="mini-fader">
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Chromatic Tuner -->
+          <div class="menu-section">
+            <div class="menu-section-title">CHROMATIC TUNER</div>
+            <div class="tuner-box" id="tuner-display">
+              <div class="tuner-scale">
+                <span class="flat-mark">♭</span>
+                <div class="tuner-meter">
+                  <div class="tuner-center-line"></div>
+                  <div class="tuner-needle" id="tuner-needle"></div>
+                </div>
+                <span class="sharp-mark">♯</span>
+              </div>
+              <div class="tuner-readout">
+                <span class="tuner-note" id="tuner-note">--</span>
+                <span class="tuner-cents" id="tuner-cents">0¢</span>
+              </div>
+              <button class="tuner-btn" id="tuner-toggle-btn">TUNER</button>
+            </div>
+          </div>
+
+          <!-- 3. Bottom Dock Toggle Switch -->
+          <div class="menu-section">
+            <div class="menu-section-title">PANEL VISIBILITY</div>
+            <button class="header-dock-btn active" id="header-dock-btn" title="สวิตช์เปิด/ปิด แถบเล่นกีตาร์และจอมอนิเตอร์ด้านล่าง">
+              <span class="dock-btn-led"></span>
+              <span class="dock-btn-text">BOTTOM GUITAR DOCK</span>
+            </button>
+          </div>
+
+          <!-- 4. Rig Memory & Reset -->
+          <div class="menu-section">
+            <div class="menu-section-title">RIG MEMORY & RESET</div>
+            <div class="menu-save-row">
+              <div class="save-status-badge saved" id="save-status-badge" title="ระบบบันทึกค่าการตั้งค่าทุกอย่างโดยอัตโนมัติ">
+                <span class="save-dot">●</span> <span class="save-text">AUTO-SAVED</span>
+              </div>
+            </div>
+            <div class="menu-actions-row">
+              <button class="reset-rig-btn reset-preset-btn" id="reset-preset-btn" title="รีเซ็ตพรีเซ็ตปัจจุบันกลับเป็นค่าเริ่มต้นโรงงาน (Reset Current Preset)">RESET PRESET</button>
+              <button class="reset-rig-btn reset-all-btn" id="reset-rig-btn" title="รีเซ็ตทุกพรีเซ็ตกลับเป็นค่าเริ่มต้นโรงงาน (Reset All Presets)">RESET ALL</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

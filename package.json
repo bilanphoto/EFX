@@ -1,0 +1,25 @@
+{
+  "name": "efx-guitar-studio",
+  "version": "1.0.1",
+  "description": "Vintage Rig Pro Guitar Studio with 27 Boss Pedals and 4 Vintage Tube Amps",
+  "main": "index.html",
+  "scripts": {
+    "bump:patch": "./bump-version.sh patch",
+    "bump:minor": "./bump-version.sh minor",
+    "bump:major": "./bump-version.sh major"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bilanphoto/EFX.git"
+  },
+  "keywords": [
+    "guitar",
+    "effects",
+    "boss-pedals",
+    "amp-simulator",
+    "web-audio-api",
+    "synthesizer"
+  ],
+  "author": "bilanphoto",
+  "license": "MIT"
+}

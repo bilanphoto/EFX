@@ -14,8 +14,12 @@
   <!-- 1. Master Header (Top Studio Rack Bar) -->
   <header class="master-header">
     <div class="header-left">
-      <div class="brand-badge">
-        <span class="brand-title">VINTAGE RIG</span>
+      <div class="brand-badge" id="brand-info-trigger" role="button" tabindex="0" title="คลิกดูข้อมูลแอพและเวอร์ชั่น (App Info & Version)">
+        <div class="brand-title-row">
+          <span class="brand-title">VINTAGE RIG</span>
+          <span class="app-version-pill" id="header-version-pill">V1.0.1</span>
+          <button class="brand-info-btn" id="app-info-btn" aria-label="App Information" title="ข้อมูลแอพ & เวอร์ชั่น (About App)">ℹ️</button>
+        </div>
         <span class="brand-sub">PRO GUITAR STUDIO</span>
       </div>
 
@@ -194,6 +198,102 @@
     </div>
   </div>
 
+  <!-- 6. INFO & ABOUT MODAL (App Name, Version V1.0.1, Specs & Updates) -->
+  <div class="modal-backdrop" id="info-modal">
+    <div class="modal-window info-modal-window">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <span class="modal-icon">🎸</span>
+          <div class="info-title-container">
+            <h3 class="info-app-title">VINTAGE RIG PRO GUITAR STUDIO</h3>
+            <div class="info-version-tag">
+              <span class="version-label">VERSION</span>
+              <span class="version-number" id="info-version-display">V1.0.1</span>
+              <span class="version-badge" id="info-status-badge">LATEST</span>
+            </div>
+          </div>
+        </div>
+        <button class="modal-close" id="info-modal-close-btn" aria-label="Close modal">✕</button>
+      </div>
+
+      <div class="info-modal-body">
+        <!-- App summary -->
+        <div class="info-summary-card">
+          <p class="info-desc">
+            สตูดิโอจำลองแร็คเอฟเฟคและตู้แอมป์กีตาร์วินเทจระดับมืออาชีพ ประมวลผลเสียงแบบเรียลไทม์ผ่าน <strong>Web Audio API Zero-Latency</strong> พร้อมชุดแป้นเหยียบเอฟเฟค Boss ครบชุด 27 รุ่น, ตู้แอมป์และแคบิเน็ต 4 รุ่นไอคอนิก, ระบบบันทึกและจำค่าพรีเซ็ตอัตโนมัติ และมอนิเตอร์เสียงครบวงจร
+          </p>
+        </div>
+
+        <!-- Specifications / Features Grid -->
+        <div class="info-spec-grid">
+          <div class="spec-card">
+            <span class="spec-icon">🎛️</span>
+            <div class="spec-title">27 Stompbox Pedals</div>
+            <div class="spec-desc">Distortion, Overdrive, Chorus, Digital Delay, Hall Reverb, Wah, EQ, Tremolo และอื่นๆ ครบทุกประเภท</div>
+          </div>
+          <div class="spec-card">
+            <span class="spec-icon">🔊</span>
+            <div class="spec-title">4 Iconic Tube Amps</div>
+            <div class="spec-desc">Marshall DSL20, Fender Acoustasonic, Vox AC30, Mesa Dual Rectifier พร้อม Cabinet Impulse Sim</div>
+          </div>
+          <div class="spec-card">
+            <span class="spec-icon">💾</span>
+            <div class="spec-title">8 Preset Rig Memory</div>
+            <div class="spec-desc">จดจำเอฟเฟค การต่อสาย และการหมุนปรับลูกบิดทุกตัวแยกตามแต่ละ Preset บันทึกอัตโนมัติ (Auto-Save)</div>
+          </div>
+          <div class="spec-card">
+            <span class="spec-icon">🎯</span>
+            <div class="spec-title">Digital Chromatic Tuner</div>
+            <div class="spec-desc">ระบบตั้งสายกีตาร์แบบเข็มดิจิตอลความแม่นยำสูง ตรวจจับความถี่และค่าเซนต์ (Cents) แบบเรียลไทม์</div>
+          </div>
+          <div class="spec-card">
+            <span class="spec-icon">🎸</span>
+            <div class="spec-title">Interactive Player Dock</div>
+            <div class="spec-desc">แป้นเล่นคอร์ดกีตาร์ 12 คอร์ด พร้อมระบบสตริปเสียงกีตาร์ไฟฟ้า และริฟฟ์เดโม่อัตโนมัติ</div>
+          </div>
+          <div class="spec-card">
+            <span class="spec-icon">⚡</span>
+            <div class="spec-title">Zero-Latency DSP</div>
+            <div class="spec-desc">เอนจินประมวลผลเสียงดิจิตอลความละเอียดสูง ทำงานโดยตรงบนเบราว์เซอร์ ไม่ต้องติดตั้งปลั๊กอิน</div>
+          </div>
+        </div>
+
+        <!-- Version & Update Management -->
+        <div class="info-update-card">
+          <div class="update-card-header">
+            <div class="update-title-group">
+              <span class="update-icon">🔄</span>
+              <div>
+                <div class="update-title">ระบบจัดการและตรวจสอบเวอร์ชั่น (Version Management)</div>
+                <div class="update-sub">เวอร์ชั่นปัจจุบัน: <strong id="info-current-ver-text">V1.0.1</strong></div>
+              </div>
+            </div>
+            <div class="update-actions">
+              <button class="info-check-update-btn" id="check-update-btn">
+                <span class="btn-spinner" id="update-spinner"></span>
+                <span>ตรวจเช็คการอัปเดต</span>
+              </button>
+              <button class="info-bump-btn" id="bump-version-btn" title="เพิ่มเวอร์ชั่นถัดไป (เช่น V1.0.1 -> V1.0.2)">
+                <span>+ เพิ่มเวอร์ชั่น (Bump)</span>
+              </button>
+            </div>
+          </div>
+          <div class="update-status-msg" id="update-status-msg">
+            ระบบทำงานบนเวอร์ชั่นล่าสุด V1.0.1 แล้ว
+          </div>
+        </div>
+
+        <!-- Changelog / Version History -->
+        <div class="info-changelog-section">
+          <div class="changelog-title">ประวัติการอัปเดต (Changelog)</div>
+          <div class="changelog-list" id="changelog-list">
+            <!-- Rendered by js/version.js -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast Notification -->
   <div class="preset-toast" id="preset-toast"></div>
 
@@ -215,6 +315,7 @@
   <script src="js/ui/amp-view.js"></script>
   <script src="js/ui/guitar-player-ui.js"></script>
 
+  <script src="js/version.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

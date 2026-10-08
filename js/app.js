@@ -76,8 +76,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   const pedalBoardUI = new window.PedalBoardUI(pedalboardContainer, chainState, openAddPedalModal);
   const ampView = new window.AmpView(amplifierContainer, chainState);
   const guitarPlayerUI = new window.GuitarPlayerUI(guitarPlayerContainer, synth, riffPlayer, engine);
-  const visualizer = new window.Visualizer(visualizerCanvas, engine);
   visualizer.start();
+
+  // Initialize App Version & Info Modal
+  if (window.AppVersion && typeof window.AppVersion.initUI === 'function') {
+    window.AppVersion.initUI();
+  }
 
   // Tooltips for Preset buttons showing model and pedal chain
   const updatePresetButtonTooltips = () => {

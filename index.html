@@ -4,6 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Boss Guitar Rig & Vintage Amps Studio</title>
+  <meta name="theme-color" content="#12151b">
+  <!-- App Icons (Effect Pedal Icon) -->
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/app-icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="assets/app-icon-512.png">
+  <link rel="shortcut icon" href="favicon.ico">
   <link rel="stylesheet" href="css/app.css">
   <link rel="stylesheet" href="css/pedals.css">
   <link rel="stylesheet" href="css/amps.css">
@@ -15,12 +23,17 @@
   <header class="master-header">
     <div class="header-left">
       <div class="brand-badge" id="brand-info-trigger" role="button" tabindex="0" title="คลิกดูข้อมูลแอพและเวอร์ชั่น (App Info & Version)">
-        <div class="brand-title-row">
-          <span class="brand-title">VINTAGE RIG</span>
-          <span class="app-version-pill" id="header-version-pill">V1.0.1</span>
-          <button class="brand-info-btn" id="app-info-btn" aria-label="App Information" title="ข้อมูลแอพ & เวอร์ชั่น (About App)">ℹ️</button>
+        <div class="brand-badge-inner">
+          <img src="assets/pedal_ds1_clean.png" alt="App Pedal Icon" class="brand-pedal-icon">
+          <div class="brand-text-col">
+            <div class="brand-title-row">
+              <span class="brand-title">VINTAGE RIG</span>
+              <span class="app-version-pill" id="header-version-pill">V1.0.1</span>
+              <button class="brand-info-btn" id="app-info-btn" aria-label="App Information" title="ข้อมูลแอพ & เวอร์ชั่น (About App)">ℹ️</button>
+            </div>
+            <span class="brand-sub">PRO GUITAR STUDIO</span>
+          </div>
         </div>
-        <span class="brand-sub">PRO GUITAR STUDIO</span>
       </div>
 
       <!-- Quick Snap Preset Buttons (1 - 8) -->
@@ -203,7 +216,7 @@
     <div class="modal-window info-modal-window">
       <div class="modal-header">
         <div class="modal-title-wrap">
-          <span class="modal-icon">🎸</span>
+          <img src="assets/app-icon-512.png" alt="App Icon" class="info-app-icon-img">
           <div class="info-title-container">
             <h3 class="info-app-title">VINTAGE RIG PRO GUITAR STUDIO</h3>
             <div class="info-version-tag">

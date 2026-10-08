@@ -582,3 +582,181 @@
   font-size: 9px;
   color: #94a3b8;
 }
+
+/* ==========================================================================
+   Iconic Brand Pedal Styling (TS9, Big Muff, Phase 90, Rat 2, Cry Baby)
+   ========================================================================== */
+
+/* 1. Ibanez TS9 Tube Screamer */
+.boss-pedal-card.type-ts9 {
+  background: radial-gradient(circle at 50% 30%, #4ade80 0%, #22c55e 50%, #15803d 100%) !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7), inset 0 2px 4px rgba(255, 255, 255, 0.4) !important;
+}
+
+.type-ts9 .card-boss-logo {
+  color: #022c22 !important;
+  font-family: sans-serif;
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+
+/* 2. Electro-Harmonix Big Muff Pi NYC */
+.boss-pedal-card.type-bigmuff {
+  background: linear-gradient(180deg, #f1f5f9 0%, #cbd5e1 40%, #94a3b8 100%) !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8), inset 0 2px 5px rgba(255, 255, 255, 0.8) !important;
+  border-color: #64748b !important;
+}
+
+.type-bigmuff .card-upper-well {
+  background: rgba(15, 23, 42, 0.9) !important;
+}
+
+.type-bigmuff .card-boss-logo {
+  color: #b91c1c !important;
+  font-family: serif;
+  font-style: italic;
+  font-weight: 900;
+}
+
+/* 3. MXR Phase 90 */
+.boss-pedal-card.type-phase90 {
+  background: radial-gradient(circle at 50% 30%, #fb923c 0%, #ea580c 50%, #9a3412 100%) !important;
+}
+
+.type-phase90 .card-boss-logo {
+  color: #fff !important;
+  letter-spacing: 3px;
+}
+
+.phase90-layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+}
+
+.phase90-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.phase90-mode-btn {
+  background: #181d24;
+  border: 1px solid #fed7aa;
+  color: #fed7aa;
+  font-size: 7px;
+  font-weight: 900;
+  padding: 2px 6px;
+  border-radius: 3px;
+  cursor: pointer;
+  letter-spacing: 1px;
+}
+
+.phase90-mode-btn.active {
+  background: #ea580c;
+  color: #fff;
+  border-color: #ffedd5;
+  box-shadow: 0 0 6px rgba(234, 88, 12, 0.6);
+}
+
+/* 4. ProCo Rat 2 */
+.boss-pedal-card.type-rat2 {
+  background: radial-gradient(circle at 50% 30%, #1e293b 0%, #0f172a 60%, #020617 100%) !important;
+  border: 3px solid #334155 !important;
+}
+
+.type-rat2 .card-boss-logo {
+  color: #ef4444 !important;
+  font-family: 'Impact', sans-serif;
+  letter-spacing: 2px;
+}
+
+.type-rat2 .rat-logo-title {
+  text-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
+}
+
+/* 5. Dunlop Cry Baby Wah */
+.boss-pedal-card.type-crybaby {
+  background: radial-gradient(circle at 50% 30%, #18181b 0%, #09090b 70%, #000000 100%) !important;
+  border: 3px solid #27272a !important;
+}
+
+.type-crybaby .card-rubber-tread {
+  background: repeating-linear-gradient(0deg, #18181b 0, #18181b 3px, #27272a 3px, #27272a 6px) !important;
+}
+
+.type-crybaby .card-boss-logo {
+  color: #fbbf24 !important;
+  font-style: italic;
+  letter-spacing: 1px;
+}
+
+.crybaby-layout {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 6px;
+  padding: 4px 6px;
+  box-sizing: border-box;
+}
+
+.crybaby-rocker-track {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.crybaby-sub-lbl {
+  font-size: 6px;
+  font-weight: 800;
+  color: #fbbf24;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+.crybaby-range {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 6px;
+  background: #27272a;
+  border-radius: 3px;
+  outline: none;
+  cursor: pointer;
+}
+
+.crybaby-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #fbbf24;
+  box-shadow: 0 0 5px rgba(251, 191, 36, 0.8);
+  cursor: pointer;
+}
+
+.crybaby-sub-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.crybaby-auto-btn {
+  background: #18181b;
+  border: 1px solid #fbbf24;
+  color: #fbbf24;
+  font-size: 7px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.crybaby-auto-btn.active {
+  background: #fbbf24;
+  color: #000;
+  box-shadow: 0 0 8px rgba(251, 191, 36, 0.6);
+}

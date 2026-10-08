@@ -215,13 +215,45 @@ class PedalBoardUI {
         return `<div class="p-title">Chorus</div><div class="p-model">CE-2</div>`;
       case 'bf2':
         return `<div class="p-title">Flanger</div><div class="p-model">BF-2</div>`;
+      case 'ts9':
+        return `<div class="p-sub" style="color:#022c22; font-weight:900; letter-spacing:1px;">Ibanez</div><div class="p-title" style="color:#022c22; font-weight:900;">TUBE SCREAMER</div><div class="p-model" style="color:#022c22; font-weight:900;">TS9</div>`;
+      case 'bigmuff':
+        return `<div class="p-title" style="color:#b91c1c; font-weight:900; letter-spacing:1px;">electro-harmonix</div><div class="p-model" style="color:#0f172a; font-size:11px; font-weight:900;">BIG MUFF π</div>`;
+      case 'phase90':
+        return `<div class="p-title" style="color:#fff; font-style:italic; font-family:serif; font-size:13px;">Phase 90</div><div class="p-model" style="color:#fff; font-size:7px; letter-spacing:2px; font-weight:900;">MXR</div>`;
+      case 'rat2':
+        return `<div class="p-title rat-logo-title" style="color:#ef4444; font-weight:900; font-size:14px; letter-spacing:3px;">R<span style="color:#fff;">A</span>T</div><div class="p-model" style="color:#94a3b8; font-size:6px; letter-spacing:1px;">PROCO SOUND</div>`;
+      case 'crybaby':
+        return `<div class="p-title" style="color:#fbbf24; font-weight:900; font-style:italic; font-size:12px;">Cry Baby</div><div class="p-model" style="color:#94a3b8; font-size:7px; letter-spacing:1px;">ORIGINAL GCB95</div>`;
       default:
         return `<div class="p-title">${fullName}</div>`;
     }
   }
 
   _populatePedalControls(pedal, container) {
-    if (pedal.type === 'ge7') {
+    if (pedal.type === 'phase90') {
+      this._renderPhase90(container, pedal);
+    } else if (pedal.type === 'crybaby') {
+      this._renderCryBaby(container, pedal);
+    } else if (pedal.type === 'ts9') {
+      this._renderTriangle(container, pedal,
+        { key: 'tone', label: 'TONE' },
+        { key: 'level', label: 'LEVEL' },
+        { key: 'drive', label: 'DRIVE' }
+      );
+    } else if (pedal.type === 'bigmuff') {
+      this._renderInline(container, pedal, [
+        { key: 'volume', label: 'VOLUME' },
+        { key: 'tone', label: 'TONE' },
+        { key: 'sustain', label: 'SUSTAIN' }
+      ]);
+    } else if (pedal.type === 'rat2') {
+      this._renderInline(container, pedal, [
+        { key: 'dist', label: 'DIST' },
+        { key: 'filter', label: 'FILTER' },
+        { key: 'volume', label: 'VOLUME' }
+      ]);
+    } else if (pedal.type === 'ge7') {
       this._renderGE7(container, pedal);
     } else if (pedal.type === 'tu2' || pedal.type === 'tu3') {
       this._renderTU2(container, pedal);
@@ -466,6 +498,95 @@ class PedalBoardUI {
         <div class="tu2-tag">TUNER</div>
       </div>
     `;
+  }
+
+  _renderPhase90(container, pedal) {
+    container.className = 'card-knobs-area phase90-layout';
+    container.innerHTML = `
+      <div class="phase90-controls">
+        <div class="k-item" id="k-speed">
+          <span class="k-lbl">SPEED</span>
+          <div class="k-wrap"></div>
+        </div>
+        <div class="phase90-mode-row">
+          <button class="phase90-mode-btn ${pedal.params.mode === 'script' ? 'active' : ''}" id="btn-phase-mode" title="Toggle Script (Vintage warm) / Block (Resonant feedback) Mode">
+            ${pedal.params.mode === 'script' ? 'SCRIPT' : 'BLOCK'}
+          </button>
+        </div>
+      </div>
+    `;
+
+    const wrap = container.querySelector('#k-speed .k-wrap');
+    const knobEl = document.createElement('div');
+    wrap.appendChild(knobEl);
+    const r = new window.RotaryKnob(knobEl, {
+      min: 0,
+      max: 100,
+      value: pedal.params.speed ?? 40,
+      styleType: 'boss',
+      onChange: (v) => pedal.updateParam('speed', v)
+    });
+    this.activeKnobs.push(r);
+
+    const modeBtn = container.querySelector('#btn-phase-mode');
+    if (modeBtn) {
+      modeBtn.addEventListener('click', () => {
+        const nextMode = pedal.params.mode === 'script' ? 'block' : 'script';
+        pedal.updateParam('mode', nextMode);
+        modeBtn.innerText = nextMode === 'script' ? 'SCRIPT' : 'BLOCK';
+        modeBtn.className = `phase90-mode-btn ${nextMode === 'script' ? 'active' : ''}`;
+      });
+    }
+  }
+
+  _renderCryBaby(container, pedal) {
+    container.className = 'card-knobs-area crybaby-layout';
+    container.innerHTML = `
+      <div class="crybaby-controls">
+        <div class="crybaby-rocker-track">
+          <span class="crybaby-sub-lbl">ROCKER (HEEL ➔ TOE)</span>
+          <input type="range" min="0" max="100" value="${pedal.params.rocker ?? 50}" class="crybaby-range" id="cry-rocker">
+        </div>
+        <div class="crybaby-sub-row">
+          <div class="k-item" id="k-qpeak">
+            <span class="k-lbl">Q-PEAK</span>
+            <div class="k-wrap"></div>
+          </div>
+          <button class="crybaby-auto-btn ${pedal.params.mode === 'auto' ? 'active' : ''}" id="btn-cry-auto" title="Auto-Wah LFO Sweep Mode">
+            ${pedal.params.mode === 'auto' ? 'AUTO: ON' : 'MANUAL'}
+          </button>
+        </div>
+      </div>
+    `;
+
+    const rockerInput = container.querySelector('#cry-rocker');
+    if (rockerInput) {
+      rockerInput.addEventListener('input', (e) => {
+        pedal.updateParam('rocker', parseFloat(e.target.value));
+      });
+    }
+
+    const wrap = container.querySelector('#k-qpeak .k-wrap');
+    const knobEl = document.createElement('div');
+    wrap.appendChild(knobEl);
+    const r = new window.RotaryKnob(knobEl, {
+      min: 0,
+      max: 100,
+      value: pedal.params.q_peak ?? 65,
+      styleType: 'boss',
+      onChange: (v) => pedal.updateParam('q_peak', v)
+    });
+    this.activeKnobs.push(r);
+
+    const autoBtn = container.querySelector('#btn-cry-auto');
+    if (autoBtn) {
+      autoBtn.addEventListener('click', () => {
+        const nextMode = pedal.params.mode === 'auto' ? 'manual' : 'auto';
+        pedal.updateParam('mode', nextMode);
+        autoBtn.innerText = nextMode === 'auto' ? 'AUTO: ON' : 'MANUAL';
+        autoBtn.className = `crybaby-auto-btn ${nextMode === 'auto' ? 'active' : ''}`;
+      });
+    }
   }
 
   _playClickSound() {

@@ -1,10 +1,149 @@
 /**
  * Factory & User Presets
- * Showcases full collection of Boss Pedals and Fender/Marshall Amps
+ * Showcases full collection of Iconic Global Brands:
+ * Amps: Fender, Marshall, Vox, Mesa/Boogie, Orange
+ * Pedals: Boss, Ibanez, Electro-Harmonix, MXR, ProCo, Dunlop
  */
 const FACTORY_PRESETS = [
   {
     id: 'p1',
+    name: 'Texas Flood (SRV Style)',
+    genre: 'Blues / Dynamic Crunch',
+    amp: {
+      type: 'fender_twin',
+      cab: 'fender_2x12',
+      params: { volume: 55, bright: true, treble: 62, middle: 48, bass: 52, reverb: 35, master: 70 }
+    },
+    pedals: [
+      {
+        type: 'ts9',
+        bypassed: false,
+        params: { drive: 42, tone: 55, level: 78 }
+      },
+      {
+        type: 'rv5',
+        bypassed: false,
+        params: { level: 32, tone: 45, time: 42, mode: 'spring' }
+      }
+    ]
+  },
+  {
+    id: 'p2',
+    name: 'Pink Floyd Comfortably Numb',
+    genre: 'Progressive / Psychedelic Rock',
+    amp: {
+      type: 'vox_ac30',
+      cab: 'vox_2x12',
+      params: { normalVol: 40, topBoostVol: 65, bass: 55, treble: 68, toneCut: 30, master: 70 }
+    },
+    pedals: [
+      {
+        type: 'bigmuff',
+        bypassed: false,
+        params: { volume: 72, tone: 52, sustain: 78 }
+      },
+      {
+        type: 'phase90',
+        bypassed: false,
+        params: { speed: 32, mode: 'script' }
+      },
+      {
+        type: 'dd7',
+        bypassed: false,
+        params: { level: 50, feedback: 45, time: 55, mode: 'analog' }
+      }
+    ]
+  },
+  {
+    id: 'p3',
+    name: 'Master of Puppets (Thrash Metal)',
+    genre: 'Modern High-Gain Thrash Metal',
+    amp: {
+      type: 'mesa_dualrect',
+      cab: 'mesa_4x12',
+      params: { gain: 80, bass: 65, middle: 38, treble: 72, presence: 70, rectifier: 'silicon', master: 65 }
+    },
+    pedals: [
+      {
+        type: 'ns2',
+        bypassed: false,
+        params: { threshold: 55, decay: 30 }
+      },
+      {
+        type: 'rat2',
+        bypassed: false,
+        params: { dist: 40, filter: 48, volume: 80 }
+      }
+    ]
+  },
+  {
+    id: 'p4',
+    name: 'Voodoo Child Wah & Fuzz',
+    genre: 'Psychedelic Blues / Rock',
+    amp: {
+      type: 'fender_twin',
+      cab: 'fender_2x12',
+      params: { volume: 60, bright: true, treble: 65, middle: 50, bass: 55, reverb: 40, master: 68 }
+    },
+    pedals: [
+      {
+        type: 'crybaby',
+        bypassed: false,
+        params: { rocker: 65, q_peak: 75, mode: 'auto', auto_rate: 45 }
+      },
+      {
+        type: 'bd2',
+        bypassed: false,
+        params: { level: 65, tone: 58, gain: 55 }
+      }
+    ]
+  },
+  {
+    id: 'p5',
+    name: 'Orange Desert Stoner Fuzz',
+    genre: 'Stoner / Desert / Doom Rock',
+    amp: {
+      type: 'orange_rockerverb',
+      cab: 'orange_4x12',
+      params: { gain: 75, bass: 68, middle: 75, treble: 52, attenuator: 80, master: 70 }
+    },
+    pedals: [
+      {
+        type: 'bigmuff',
+        bypassed: false,
+        params: { volume: 65, tone: 45, sustain: 82 }
+      },
+      {
+        type: 'tr2',
+        bypassed: false,
+        params: { rate: 35, wave: 30, depth: 65 }
+      }
+    ]
+  },
+  {
+    id: 'p6',
+    name: 'Van Halen Brown Sound 1978',
+    genre: 'Classic Hard Rock',
+    amp: {
+      type: 'marshall_jcm800',
+      cab: 'marshall_4x12',
+      params: { gain: 82, master: 70, treble: 65, middle: 68, bass: 58, presence: 65 }
+    },
+    pedals: [
+      {
+        type: 'phase90',
+        bypassed: false,
+        params: { speed: 38, mode: 'script' }
+      },
+      {
+        type: 'dd3',
+        bypassed: false,
+        params: { level: 38, feedback: 32, time: 35, mode: '200ms' }
+      }
+    ]
+  },
+  {
+    id: 'p7',
     name: 'Marshall DSL20 Modern Lead',
     genre: 'Hard Rock / High Gain',
     amp: {
@@ -31,13 +170,13 @@ const FACTORY_PRESETS = [
     ]
   },
   {
-    id: 'p2',
-    name: 'Fender Acoustasonic Chime',
+    id: 'p8',
+    name: 'Fender Acoustasonic Ambient Chime',
     genre: 'Acoustic / Clean / Chorus',
     amp: {
       type: 'fender_acoustasonic',
       cab: 'fender_2x12',
-      params: { vol1: 50, vol2: 65, bass: 55, middle: 48, treble: 65, chorus: 45 }
+      params: { vol1: 45, vol2: 65, bass: 55, middle: 48, treble: 65, chorus: 45 }
     },
     pedals: [
       {
@@ -46,151 +185,14 @@ const FACTORY_PRESETS = [
         params: { level: 68, tone: 52, attack: 40, sustain: 55 }
       },
       {
-        type: 'rv5',
-        bypassed: false,
-        params: { level: 40, tone: 50, time: 55, mode: 'plate' }
-      }
-    ]
-  },
-  {
-    id: 'p3',
-    name: 'Nirvana DS-2 Turbo Grunge',
-    genre: 'Grunge / 90s Alternative',
-    amp: {
-      type: 'marshall_dsl20',
-      cab: 'marshall_4x12',
-      params: { channel: 'classic', classic_gain: 60, classic_vol: 75, treble: 60, middle: 65, bass: 55, presence: 60, resonance: 50, reverb: 25 }
-    },
-    pedals: [
-      {
-        type: 'ds2',
-        bypassed: false,
-        params: { level: 70, tone: 52, dist: 78, turbo: 'turbo_ii' }
-      },
-      {
         type: 'ch1',
         bypassed: false,
-        params: { level: 60, eq: 55, rate: 40, depth: 75 }
-      }
-    ]
-  },
-  {
-    id: 'p4',
-    name: 'Texas Blues (SRV Style)',
-    genre: 'Blues / Dynamic Crunch',
-    amp: {
-      type: 'fender_twin',
-      cab: 'fender_2x12',
-      params: { volume: 55, bright: true, treble: 60, middle: 45, bass: 55, reverb: 35, master: 70 }
-    },
-    pedals: [
-      {
-        type: 'bd2',
-        bypassed: false,
-        params: { level: 68, tone: 52, gain: 48 }
+        params: { level: 60, eq: 55, rate: 35, depth: 75 }
       },
       {
         type: 'rv5',
         bypassed: false,
-        params: { level: 30, tone: 45, time: 40, mode: 'spring' }
-      }
-    ]
-  },
-  {
-    id: 'p5',
-    name: 'Vintage Tremolo Surf & Pop',
-    genre: 'Retro 60s / Surf',
-    amp: {
-      type: 'fender_twin',
-      cab: 'fender_2x12',
-      params: { volume: 48, bright: true, treble: 65, middle: 45, bass: 50, reverb: 55, master: 72 }
-    },
-    pedals: [
-      {
-        type: 'tr2',
-        bypassed: false,
-        params: { rate: 55, wave: 40, depth: 75 }
-      },
-      {
-        type: 'ge7',
-        bypassed: false,
-        params: { b100: 0, b200: 2, b400: -2, b800: 1, b1600: 3, b3200: 4, b6400: 2, level: 1 }
-      }
-    ]
-  },
-  {
-    id: 'p6',
-    name: 'Heavy Metal High Gain DS-1',
-    genre: '80s Heavy Metal',
-    amp: {
-      type: 'marshall_jcm800',
-      cab: 'marshall_4x12',
-      params: { gain: 80, master: 70, treble: 65, middle: 65, bass: 60, presence: 68 }
-    },
-    pedals: [
-      {
-        type: 'ns2',
-        bypassed: false,
-        params: { threshold: 50, decay: 35 }
-      },
-      {
-        type: 'ds1',
-        bypassed: false,
-        params: { level: 68, tone: 48, dist: 72 }
-      },
-      {
-        type: 'dd3',
-        bypassed: false,
-        params: { level: 42, feedback: 36, time: 50, mode: '800ms' }
-      }
-    ]
-  },
-  {
-    id: 'p7',
-    name: 'OS-2 Blended Color Crunch',
-    genre: 'Modern Rock',
-    amp: {
-      type: 'marshall_dsl20',
-      cab: 'marshall_greenback',
-      params: { channel: 'classic', classic_gain: 50, classic_vol: 70, treble: 55, middle: 65, bass: 55, presence: 58, resonance: 52, reverb: 20 }
-    },
-    pedals: [
-      {
-        type: 'os2',
-        bypassed: false,
-        params: { level: 65, tone: 52, drive: 60, color: 55 }
-      },
-      {
-        type: 'ce2',
-        bypassed: false,
-        params: { rate: 35, depth: 60 }
-      }
-    ]
-  },
-  {
-    id: 'p8',
-    name: 'Ambient Dream Delay & Hall',
-    genre: 'Shoegaze / Ambient',
-    amp: {
-      type: 'fender_acoustasonic',
-      cab: 'fender_2x12',
-      params: { vol1: 40, vol2: 60, bass: 50, middle: 50, treble: 60, chorus: 25 }
-    },
-    pedals: [
-      {
-        type: 'ch1',
-        bypassed: false,
-        params: { level: 65, eq: 50, rate: 30, depth: 80 }
-      },
-      {
-        type: 'dd3',
-        bypassed: false,
-        params: { level: 58, feedback: 65, time: 65, mode: '800ms' }
-      },
-      {
-        type: 'rv5',
-        bypassed: false,
-        params: { level: 70, tone: 60, time: 85, mode: 'hall' }
+        params: { level: 45, tone: 50, time: 60, mode: 'plate' }
       }
     ]
   }

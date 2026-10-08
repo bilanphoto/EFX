@@ -5,10 +5,21 @@
 (function(window) {
   'use strict';
 
-  const DEFAULT_VERSION = 'V1.0.1';
+  const DEFAULT_VERSION = 'V1.1.0';
   const APP_NAME = 'VINTAGE RIG PRO GUITAR STUDIO';
 
   const CHANGELOG = [
+    {
+      version: 'V1.1.0',
+      date: '2026-10-08',
+      title: 'Iconic Global Brands Expansion (Amps & Stompboxes)',
+      items: [
+        'เพิ่มแอมป์หลอดระดับโลก 3 ยี่ห้อดัง: Vox AC30 Top Boost (UK), Mesa/Boogie Dual Rectifier (USA), และ Orange Rockerverb 50 MKIII (UK)',
+        'เพิ่มเอฟเฟคก้อนระดับตำนาน 5 ยี่ห้อชั้นนำ: Ibanez TS9 Tube Screamer, Electro-Harmonix Big Muff Pi, MXR Phase 90, ProCo Rat 2, และ Dunlop Cry Baby Wah',
+        'จำลองเสียง DSP ตรงตามคาแรคเตอร์วงจรฮาร์ดแวร์จริง (EL84 Class-A Chime, 6L6 Tube Sag, Fasel Inductor Wah, 4-stage Fuzz & Phaser)',
+        'เพิ่มระบบตู้ลำโพง Cabinet Simulator IR (Mesa 4x12 V30, Orange 4x12 PPC) และ 8 พรีเซ็ตศิลปินระดับโลก (SRV, Pink Floyd, Metallica, EVH, Hendrix)'
+      ]
+    },
     {
       version: 'V1.0.1',
       date: '2026-10-08',

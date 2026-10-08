@@ -133,6 +133,36 @@ class CabinetSim {
           airDecay: 0.030
         });
         break;
+
+      case 'mesa_4x12':
+        this.name = 'Mesa/Boogie Rectifier Standard 4x12 Oversized (Celestion V30)';
+        // Punishing 115Hz bottom end, aggressive 2.6kHz upper mid punch
+        this.convolver.buffer = this._generateCabIR({
+          lowFreq: 115,
+          lowGain: 8.5,
+          midCutFreq: 520,
+          midCutGain: -2.5,
+          presFreq: 2600,
+          presGain: 9.0,
+          highCut: 4800,
+          airDecay: 0.050
+        });
+        break;
+
+      case 'orange_4x12':
+        this.name = 'Orange PPC412 4x12 High-Density Birch (Celestion V30)';
+        // Thick resonant 105Hz low end, creamy warm 2.1kHz presence
+        this.convolver.buffer = this._generateCabIR({
+          lowFreq: 105,
+          lowGain: 7.5,
+          midCutFreq: 460,
+          midCutGain: -1.0,
+          presFreq: 2100,
+          presGain: 7.5,
+          highCut: 4600,
+          airDecay: 0.045
+        });
+        break;
     }
 
     this.applyFilterSettings();
@@ -154,6 +184,18 @@ class CabinetSim {
       this.midShapeFilter.frequency.setTargetAtTime(isAxis ? 3400 : 2500, t, 0.02);
       this.midShapeFilter.gain.setTargetAtTime(isAxis ? 6.0 : 3.0, t, 0.02);
       this.highCutFilter.frequency.setTargetAtTime(isAxis ? 6000 : 4800, t, 0.02);
+    } else if (this.cabinetType === 'mesa_4x12') {
+      this.lowResFilter.frequency.setTargetAtTime(115, t, 0.02);
+      this.lowResFilter.gain.setTargetAtTime(5.5, t, 0.02);
+      this.midShapeFilter.frequency.setTargetAtTime(isAxis ? 2600 : 1900, t, 0.02);
+      this.midShapeFilter.gain.setTargetAtTime(isAxis ? 6.0 : 2.5, t, 0.02);
+      this.highCutFilter.frequency.setTargetAtTime(isAxis ? 5000 : 4100, t, 0.02);
+    } else if (this.cabinetType === 'orange_4x12') {
+      this.lowResFilter.frequency.setTargetAtTime(105, t, 0.02);
+      this.lowResFilter.gain.setTargetAtTime(4.8, t, 0.02);
+      this.midShapeFilter.frequency.setTargetAtTime(isAxis ? 2100 : 1600, t, 0.02);
+      this.midShapeFilter.gain.setTargetAtTime(isAxis ? 5.5 : 2.2, t, 0.02);
+      this.highCutFilter.frequency.setTargetAtTime(isAxis ? 4800 : 3900, t, 0.02);
     } else {
       // Fender
       this.lowResFilter.frequency.setTargetAtTime(90, t, 0.02);

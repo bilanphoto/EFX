@@ -42,6 +42,21 @@ function makeDistortionCurve(type, amount, n_samples = 4096) {
       // JHS Angry Charlie high gain roaring drive
       const k = amount * 2.2 + 2.5;
       curve[i] = Math.tanh(k * x * 2.6);
+    } else if (type === 'tubescreamer') {
+      // Ibanez TS9 symmetrical soft-clipping with 4558D op-amp overdrive
+      const k = amount * 0.9 + 1.6;
+      const v = Math.tanh(k * x * 1.7);
+      curve[i] = v * (1 - 0.08 * Math.abs(v));
+    } else if (type === 'bigmuff') {
+      // EHX Big Muff Pi 4-stage silicon fuzz with massive sustain and compression
+      const k = amount * 3.2 + 4.5;
+      const v = Math.tanh(k * x * 2.8);
+      curve[i] = Math.max(-0.52, Math.min(0.52, v)) * 1.75;
+    } else if (type === 'rat') {
+      // ProCo Rat 2 LM308 slew-rate limiting with hard diode clipping to ground
+      const k = amount * 2.4 + 3.0;
+      const v = Math.tanh(k * x * 3.2);
+      curve[i] = Math.max(-0.56, Math.min(0.58, v)) * 1.6;
     } else {
       const k = typeof amount === 'number' ? amount : 50;
       curve[i] = ((3 + k) * x * 20 * deg) / (Math.PI + k * Math.abs(x));
@@ -1771,9 +1786,387 @@ class TE2TeraEchoPedal extends BasePedal {
   }
 }
 
+/**
+ * 21. Ibanez TS9 Tube Screamer (Iconic Green Overdrive)
+ * Circuit: 4558D op-amp, 720Hz bass rolloff + mid hump, active tone tilt
+ * Controls: drive (0-100), tone (0-100), level (0-100)
+ */
+class IbanezTS9Pedal extends BasePedal {
+  constructor(id, engine) {
+    super(id, 'ts9', 'Ibanez TS9 Tube Screamer', engine);
+
+    // Pre-distortion TS9 EQ: high-pass filter cutting mud below 720Hz
+    this.subCutFilter = this.ctx.createBiquadFilter();
+    // Trademark 720Hz mid-hump
+    this.midHumpFilter = this.ctx.createBiquadFilter();
+
+    this.driveGain = this.ctx.createGain();
+    this.shaper = this.ctx.createWaveShaper();
+
+    // Active Tone Tilt network
+    this.toneFilter = this.ctx.createBiquadFilter();
+    this.levelGain = this.ctx.createGain();
+
+    this._setupGraph();
+
+    this.params = { drive: 45, tone: 52, level: 75 };
+    this.applyParams();
+  }
+
+  _setupGraph() {
+    this.subCutFilter.type = 'highpass';
+    this.subCutFilter.frequency.setValueAtTime(720, this.ctx.currentTime);
+    this.subCutFilter.Q.setValueAtTime(0.7, this.ctx.currentTime);
+
+    this.midHumpFilter.type = 'peaking';
+    this.midHumpFilter.frequency.setValueAtTime(723, this.ctx.currentTime);
+    this.midHumpFilter.Q.setValueAtTime(1.4, this.ctx.currentTime);
+    this.midHumpFilter.gain.setValueAtTime(6.0, this.ctx.currentTime);
+
+    this.shaper.oversample = '4x';
+    this.toneFilter.type = 'lowpass';
+
+    this.effectInputNode.connect(this.subCutFilter);
+    this.subCutFilter.connect(this.midHumpFilter);
+    this.midHumpFilter.connect(this.driveGain);
+    this.driveGain.connect(this.shaper);
+    this.shaper.connect(this.toneFilter);
+    this.toneFilter.connect(this.levelGain);
+    this.levelGain.connect(this.effectOutputNode);
+  }
+
+  applyParams() {
+    const t = this.ctx.currentTime;
+    const d = 1.0 + (this.params.drive / 100) * 14.0;
+    this.driveGain.gain.setTargetAtTime(d, t, 0.02);
+    this.shaper.curve = makeDistortionCurve('tubescreamer', this.params.drive);
+
+    // Active tone: sweeps 1.2kHz (dark warm) to 5.2kHz (biting clarity)
+    const cutoff = 1200 + (this.params.tone / 100) * 4000;
+    this.toneFilter.frequency.setTargetAtTime(cutoff, t, 0.02);
+
+    const lvl = (this.params.level / 100) * 1.6;
+    this.levelGain.gain.setTargetAtTime(lvl, t, 0.02);
+  }
+
+  updateParam(name, val) {
+    super.updateParam(name, val);
+    this.applyParams();
+  }
+}
+
+/**
+ * 22. Electro-Harmonix Big Muff Pi (NYC Fuzz / Distortion)
+ * Circuit: 4 cascaded transistor stages, infinite singing sustain, 1kHz mid scoop
+ * Controls: volume (0-100), tone (0-100), sustain (0-100)
+ */
+class EHXBigMuffPedal extends BasePedal {
+  constructor(id, engine) {
+    super(id, 'bigmuff', 'Electro-Harmonix Big Muff Pi', engine);
+
+    this.preGain = this.ctx.createGain();
+    this.stage1Shaper = this.ctx.createWaveShaper();
+    this.stage2Shaper = this.ctx.createWaveShaper();
+
+    // Big Muff passive tone stack: deep 1kHz mid scoop + treble tilt
+    this.midScoop = this.ctx.createBiquadFilter();
+    this.bassShelf = this.ctx.createBiquadFilter();
+    this.trebShelf = this.ctx.createBiquadFilter();
+    this.volGain = this.ctx.createGain();
+
+    this._setupGraph();
+
+    this.params = { volume: 65, tone: 50, sustain: 75 };
+    this.applyParams();
+  }
+
+  _setupGraph() {
+    this.stage1Shaper.oversample = '4x';
+    this.stage2Shaper.oversample = '4x';
+
+    this.midScoop.type = 'peaking';
+    this.midScoop.frequency.setValueAtTime(1000, this.ctx.currentTime);
+    this.midScoop.Q.setValueAtTime(1.2, this.ctx.currentTime);
+    this.midScoop.gain.setValueAtTime(-9.5, this.ctx.currentTime);
+
+    this.bassShelf.type = 'lowshelf';
+    this.bassShelf.frequency.setValueAtTime(350, this.ctx.currentTime);
+
+    this.trebShelf.type = 'highshelf';
+    this.trebShelf.frequency.setValueAtTime(2000, this.ctx.currentTime);
+
+    this.effectInputNode.connect(this.preGain);
+    this.preGain.connect(this.stage1Shaper);
+    this.stage1Shaper.connect(this.stage2Shaper);
+    this.stage2Shaper.connect(this.midScoop);
+    this.midScoop.connect(this.bassShelf);
+    this.bassShelf.connect(this.trebShelf);
+    this.trebShelf.connect(this.volGain);
+    this.volGain.connect(this.effectOutputNode);
+  }
+
+  applyParams() {
+    const t = this.ctx.currentTime;
+    const sust = 1.0 + (this.params.sustain / 100) * 18.0;
+    this.preGain.gain.setTargetAtTime(sust, t, 0.02);
+
+    this.stage1Shaper.curve = makeDistortionCurve('bigmuff', this.params.sustain);
+    this.stage2Shaper.curve = makeDistortionCurve('hard', this.params.sustain * 0.7);
+
+    // Tone balance: 0 = heavy woolly bass, 100 = biting treble razor
+    const toneVal = this.params.tone / 100;
+    const bassDb = 8.0 - toneVal * 16.0;
+    const trebDb = -10.0 + toneVal * 18.0;
+    this.bassShelf.gain.setTargetAtTime(bassDb, t, 0.02);
+    this.trebShelf.gain.setTargetAtTime(trebDb, t, 0.02);
+
+    const vol = (this.params.volume / 100) * 1.5;
+    this.volGain.gain.setTargetAtTime(vol, t, 0.02);
+  }
+
+  updateParam(name, val) {
+    super.updateParam(name, val);
+    this.applyParams();
+  }
+}
+
+/**
+ * 23. MXR Phase 90 (Iconic Orange Analog Phaser)
+ * Circuit: 4-stage cascaded JFET all-pass filters with LFO sweep and feedback
+ * Controls: speed (0-100), mode ('script' | 'block')
+ */
+class MXRPhase90Pedal extends BasePedal {
+  constructor(id, engine) {
+    super(id, 'phase90', 'MXR Phase 90', engine);
+
+    // 4 All-pass filter stages
+    this.stage1 = this.ctx.createBiquadFilter();
+    this.stage2 = this.ctx.createBiquadFilter();
+    this.stage3 = this.ctx.createBiquadFilter();
+    this.stage4 = this.ctx.createBiquadFilter();
+
+    // Feedback for Block logo mode
+    this.feedbackGain = this.ctx.createGain();
+
+    // LFO for sweep
+    this.lfo = this.ctx.createOscillator();
+
+    // Dry / Wet mix for phasing cancellation
+    this.drySplit = this.ctx.createGain();
+    this.wetSplit = this.ctx.createGain();
+
+    this._setupGraph();
+
+    this.params = { speed: 40, mode: 'block' }; // 'script' or 'block'
+    this.applyParams();
+  }
+
+  _setupGraph() {
+    [this.stage1, this.stage2, this.stage3, this.stage4].forEach(f => {
+      f.type = 'allpass';
+      f.frequency.setValueAtTime(800, this.ctx.currentTime);
+    });
+
+    this.lfo.type = 'sine';
+    this.lfo.frequency.setValueAtTime(0.8, this.ctx.currentTime);
+
+    this.lfo.connect(this.stage1.frequency);
+    this.lfo.connect(this.stage2.frequency);
+    this.lfo.connect(this.stage3.frequency);
+    this.lfo.connect(this.stage4.frequency);
+    this.lfo.start();
+
+    // Graph
+    this.effectInputNode.connect(this.drySplit);
+    this.effectInputNode.connect(this.stage1);
+
+    this.stage1.connect(this.stage2);
+    this.stage2.connect(this.stage3);
+    this.stage3.connect(this.stage4);
+    this.stage4.connect(this.wetSplit);
+
+    // Feedback loop from stage 4 back to stage 1
+    this.stage4.connect(this.feedbackGain);
+    this.feedbackGain.connect(this.stage1);
+
+    this.drySplit.connect(this.effectOutputNode);
+    this.wetSplit.connect(this.effectOutputNode);
+
+    this.drySplit.gain.setValueAtTime(0.65, this.ctx.currentTime);
+    this.wetSplit.gain.setValueAtTime(0.65, this.ctx.currentTime);
+  }
+
+  applyParams() {
+    const t = this.ctx.currentTime;
+    // Speed: 0.15 Hz to 7.5 Hz
+    const freq = 0.15 + Math.pow(this.params.speed / 100, 2) * 7.35;
+    this.lfo.frequency.setTargetAtTime(freq, t, 0.02);
+
+    // Mode: 'block' has resonant feedback (0.42), 'script' is vintage without feedback (0.0)
+    const fb = this.params.mode === 'block' ? 0.42 : 0.0;
+    this.feedbackGain.gain.setTargetAtTime(fb, t, 0.02);
+  }
+
+  updateParam(name, val) {
+    super.updateParam(name, val);
+    this.applyParams();
+  }
+
+  disconnect() {
+    try { this.lfo.stop(); } catch (e) {}
+    super.disconnect();
+  }
+}
+
+/**
+ * 24. ProCo Rat 2 (Classic Slanted Black Box Distortion / Fuzz)
+ * Circuit: LM308 op-amp slew limiting, hard diode clipping, reverse high-cut filter
+ * Controls: dist (0-100), filter (0-100), volume (0-100)
+ */
+class ProCoRat2Pedal extends BasePedal {
+  constructor(id, engine) {
+    super(id, 'rat2', 'ProCo Rat 2', engine);
+
+    this.preBoost = this.ctx.createBiquadFilter();
+    this.distGain = this.ctx.createGain();
+    this.shaper = this.ctx.createWaveShaper();
+
+    // Iconic Reverse Filter (clockwise cuts highs!)
+    this.ratFilter = this.ctx.createBiquadFilter();
+    this.volGain = this.ctx.createGain();
+
+    this._setupGraph();
+
+    this.params = { dist: 65, filter: 50, volume: 70 };
+    this.applyParams();
+  }
+
+  _setupGraph() {
+    this.preBoost.type = 'peaking';
+    this.preBoost.frequency.setValueAtTime(1400, this.ctx.currentTime);
+    this.preBoost.Q.setValueAtTime(1.1, this.ctx.currentTime);
+    this.preBoost.gain.setValueAtTime(4.0, this.ctx.currentTime);
+
+    this.shaper.oversample = '4x';
+    this.ratFilter.type = 'lowpass';
+    this.ratFilter.Q.setValueAtTime(0.7, this.ctx.currentTime);
+
+    this.effectInputNode.connect(this.preBoost);
+    this.preBoost.connect(this.distGain);
+    this.distGain.connect(this.shaper);
+    this.shaper.connect(this.ratFilter);
+    this.ratFilter.connect(this.volGain);
+    this.volGain.connect(this.effectOutputNode);
+  }
+
+  applyParams() {
+    const t = this.ctx.currentTime;
+    const d = 1.0 + (this.params.dist / 100) * 16.0;
+    this.distGain.gain.setTargetAtTime(d, t, 0.02);
+    this.shaper.curve = makeDistortionCurve('rat', this.params.dist);
+
+    // Rat filter is reversed: 0% = 9000Hz (bright, biting edge), 100% = 850Hz (dark fuzzy sludge)
+    const cut = 9000 - (this.params.filter / 100) * 8150;
+    this.ratFilter.frequency.setTargetAtTime(cut, t, 0.02);
+
+    const vol = (this.params.volume / 100) * 1.5;
+    this.volGain.gain.setTargetAtTime(vol, t, 0.02);
+  }
+
+  updateParam(name, val) {
+    super.updateParam(name, val);
+    this.applyParams();
+  }
+}
+
+/**
+ * 25. Dunlop Cry Baby Classic GCB95 (Legendary Wah-Wah Pedal)
+ * Circuit: Fasel inductor resonant bandpass filter (350Hz - 2.2kHz) with rocker pedal control
+ * Controls: rocker (0-100), q_peak (0-100), mode ('manual' | 'auto'), auto_rate (0-100)
+ */
+class DunlopCryBabyPedal extends BasePedal {
+  constructor(id, engine) {
+    super(id, 'crybaby', 'Dunlop Cry Baby GCB95', engine);
+
+    // Resonant Fasel inductor bandpass filter
+    this.wahFilter = this.ctx.createBiquadFilter();
+    this.boostGain = this.ctx.createGain();
+
+    // Auto-rocker LFO for auto-wah mode
+    this.autoLfo = this.ctx.createOscillator();
+    this.autoLfoGain = this.ctx.createGain();
+
+    this._setupGraph();
+
+    this.params = {
+      rocker: 50,
+      q_peak: 65,
+      mode: 'manual', // 'manual' or 'auto'
+      auto_rate: 45
+    };
+    this.applyParams();
+  }
+
+  _setupGraph() {
+    this.wahFilter.type = 'peaking';
+    this.wahFilter.frequency.setValueAtTime(800, this.ctx.currentTime);
+    this.wahFilter.gain.setValueAtTime(14.0, this.ctx.currentTime);
+
+    this.autoLfo.type = 'triangle';
+    this.autoLfo.frequency.setValueAtTime(1.5, this.ctx.currentTime);
+    this.autoLfoGain.gain.setValueAtTime(0, this.ctx.currentTime);
+
+    this.autoLfo.connect(this.autoLfoGain);
+    this.autoLfoGain.connect(this.wahFilter.frequency);
+    this.autoLfo.start();
+
+    this.effectInputNode.connect(this.wahFilter);
+    this.wahFilter.connect(this.boostGain);
+    this.boostGain.connect(this.effectOutputNode);
+
+    this.boostGain.gain.setValueAtTime(1.2, this.ctx.currentTime);
+  }
+
+  applyParams() {
+    const t = this.ctx.currentTime;
+    // Heel (350 Hz) to Toe (2200 Hz)
+    const centerFreq = 350 + (this.params.rocker / 100) * 1850;
+    this.wahFilter.frequency.setTargetAtTime(centerFreq, t, 0.02);
+
+    // Q resonance (throaty vocal wah sharpness)
+    const q = 2.5 + (this.params.q_peak / 100) * 6.5;
+    this.wahFilter.Q.setTargetAtTime(q, t, 0.02);
+
+    if (this.params.mode === 'auto') {
+      const rate = 0.5 + (this.params.auto_rate / 100) * 4.5;
+      this.autoLfo.frequency.setTargetAtTime(rate, t, 0.02);
+      this.autoLfoGain.gain.setTargetAtTime(650, t, 0.02);
+    } else {
+      this.autoLfoGain.gain.setTargetAtTime(0, t, 0.02);
+    }
+  }
+
+  updateParam(name, val) {
+    super.updateParam(name, val);
+    this.applyParams();
+  }
+
+  disconnect() {
+    try { this.autoLfo.stop(); } catch (e) {}
+    super.disconnect();
+  }
+}
+
 // Factory helper to instantiate pedals by type
 function createPedalInstance(type, id, engine) {
   switch (type) {
+    // 5 World Famous Iconic Brand Pedals:
+    case 'ts9': return new IbanezTS9Pedal(id, engine);
+    case 'bigmuff': return new EHXBigMuffPedal(id, engine);
+    case 'phase90': return new MXRPhase90Pedal(id, engine);
+    case 'rat2': return new ProCoRat2Pedal(id, engine);
+    case 'crybaby': return new DunlopCryBabyPedal(id, engine);
+
     // 20 Pedals from uploaded grid (media_1791433382703.jpg):
     case 'frv1': return new FRV1FenderReverbPedal(id, engine);
     case 'dm2w': return new DM2wDelayPedal(id, engine);

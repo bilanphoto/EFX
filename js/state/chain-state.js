@@ -13,6 +13,63 @@ class ChainState {
 
     // Complete Registry of all 15 iconic Boss pedals
     this.pedalCatalog = [
+      // === 5 World-Famous Iconic Brand Pedals ===
+      {
+        type: 'ts9',
+        name: 'Ibanez TS9 Tube Screamer',
+        brand: 'Ibanez',
+        category: 'Drive / Overdrive',
+        shortName: 'TS-9',
+        color: '#4ade80',
+        textColor: '#0f172a',
+        badge: 'IBANEZ TUBE SCREAMER',
+        desc: 'The benchmark overdrive with 720Hz mid-hump and transparent tube-like crunch'
+      },
+      {
+        type: 'bigmuff',
+        name: 'Electro-Harmonix Big Muff Pi NYC',
+        brand: 'Electro-Harmonix',
+        category: 'Fuzz / Distortion',
+        shortName: 'BIG MUFF',
+        color: '#cbd5e1',
+        textColor: '#b91c1c',
+        badge: 'EHX PI NYC FUZZ',
+        desc: 'Cascaded 4-stage transistor fuzz delivering endless singing sustain and scooped mids'
+      },
+      {
+        type: 'phase90',
+        name: 'MXR Phase 90 (Script / Block)',
+        brand: 'MXR',
+        category: 'Modulation',
+        shortName: 'PHASE 90',
+        color: '#f97316',
+        textColor: '#ffffff',
+        badge: 'MXR ANALOG PHASER',
+        desc: '4-stage all-pass analog phaser providing the legendary Van Halen swirling modulation'
+      },
+      {
+        type: 'rat2',
+        name: 'ProCo Rat 2 Distortion',
+        brand: 'ProCo',
+        category: 'Drive / Distortion',
+        shortName: 'RAT 2',
+        color: '#1e293b',
+        textColor: '#ef4444',
+        badge: 'PROCO HARD DISTORTION',
+        desc: 'LM308 op-amp slew limiting with dual hard clipping diodes and reverse high-cut filter'
+      },
+      {
+        type: 'crybaby',
+        name: 'Dunlop Cry Baby GCB95 Wah',
+        brand: 'Dunlop',
+        category: 'Filter / Wah',
+        shortName: 'CRY BABY',
+        color: '#18181b',
+        textColor: '#fbbf24',
+        badge: 'DUNLOP WAH-WAH',
+        desc: 'Legendary Fasel inductor resonant bandpass filter sweeping from vocal heel to biting toe'
+      },
+
       // === 20 Pedals from Uploaded Grid (media_1791433382703.jpg) ===
       {
         type: 'frv1',
@@ -321,6 +378,30 @@ class ChainState {
         shortName: 'JCM800',
         tagline: 'Legendary British High-Gain Punch & Roar',
         theme: 'marshall-gold'
+      },
+      {
+        type: 'vox_ac30',
+        name: 'Vox AC30 Top Boost',
+        brand: 'Vox',
+        shortName: 'AC30',
+        tagline: 'British Invasion EL84 Class-A Chime & Top Cut',
+        theme: 'vox-diamond'
+      },
+      {
+        type: 'mesa_dualrect',
+        name: 'Mesa/Boogie Dual Rectifier',
+        brand: 'Mesa/Boogie',
+        shortName: 'Dual Rectifier',
+        tagline: 'Cascaded 12AX7 High Gain & Crushing Modern Low-End',
+        theme: 'mesa-treadplate'
+      },
+      {
+        type: 'orange_rockerverb',
+        name: 'Orange Rockerverb 50 MKIII',
+        brand: 'Orange',
+        shortName: 'Rockerverb',
+        tagline: 'Thick Fuzzy British Roar & Built-in Attenuator',
+        theme: 'orange-tolex'
       }
     ];
 

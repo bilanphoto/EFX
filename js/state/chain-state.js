@@ -429,10 +429,10 @@ class ChainState {
       // Handle version 2 (multi-preset bank) or migrate version 1 (single preset)
       if (Array.isArray(data.presets) && data.presets.length > 0) {
         this.presets = data.presets;
-        // Ensure missing slots are filled with factory defaults
+        // Ensure missing or empty slots are filled with factory defaults
         const defPresets = this._getDefaultPresets();
         for (let i = 0; i < defPresets.length; i++) {
-          if (!this.presets[i]) {
+          if (!this.presets[i] || !Array.isArray(this.presets[i].pedals) || (this.presets[i].pedals.length === 0 && defPresets[i].pedals && defPresets[i].pedals.length > 0)) {
             this.presets[i] = JSON.parse(JSON.stringify(defPresets[i]));
           }
         }

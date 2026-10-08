@@ -36,10 +36,11 @@ class AudioEngine {
     }
 
     const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-    this.ctx = new AudioContextClass({
-      latencyHint: 'interactive',
-      sampleRate: 44100
-    });
+    try {
+      this.ctx = new AudioContextClass({ latencyHint: 'interactive' });
+    } catch (e) {
+      this.ctx = new AudioContextClass();
+    }
 
     // Master Limiter (prevent ear damage and speaker distortion)
     this.masterLimiter = this.ctx.createDynamicsCompressor();

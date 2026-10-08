@@ -76,6 +76,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const pedalBoardUI = new window.PedalBoardUI(pedalboardContainer, chainState, openAddPedalModal);
   const ampView = new window.AmpView(amplifierContainer, chainState);
   const guitarPlayerUI = new window.GuitarPlayerUI(guitarPlayerContainer, synth, riffPlayer, engine);
+  const visualizer = new window.Visualizer(visualizerCanvas, engine);
   visualizer.start();
 
   // Initialize App Version & Info Modal
@@ -370,22 +371,27 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // Initialize Audio & Restore Saved Setup or Load Preset 0
-  await engine.init();
+  try {
+    await engine.init();
+  } catch (err) {
+    console.warn('AudioEngine will resume upon user interaction:', err);
+  }
+
+  let presetLoaded = false;
   if (chainState.hasSavedState()) {
     const restored = chainState.loadFromStorage();
-    if (restored) {
+    if (restored && chainState.pedals && chainState.pedals.length > 0) {
       const activeIdx = chainState.activePresetIdx ?? 0;
       presetButtons.forEach(b => b.classList.remove('active'));
       if (presetButtons[activeIdx]) {
         presetButtons[activeIdx].classList.add('active');
       }
+      presetLoaded = true;
       console.log('Restored user setup from localStorage.');
-    } else {
-      chainState.selectPreset(0);
-      presetButtons.forEach(b => b.classList.remove('active'));
-      if (presetButtons[0]) presetButtons[0].classList.add('active');
     }
-  } else {
+  }
+
+  if (!presetLoaded) {
     chainState.selectPreset(0);
     presetButtons.forEach(b => b.classList.remove('active'));
     if (presetButtons[0]) presetButtons[0].classList.add('active');

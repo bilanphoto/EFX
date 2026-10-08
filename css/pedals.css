@@ -1,0 +1,584 @@
+/* ==========================================================================
+   Hyper-Realistic Boss Pedalboard Rack (Matching Screenshot 3 AmpliTube Layout)
+   ========================================================================== */
+
+.pedalboard-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pedalboard-shelf {
+  width: 100%;
+  max-width: 960px;
+  min-height: 310px;
+  background: #17110c;
+  background-image: 
+    linear-gradient(180deg, #100b08 0%, #1e150f 40%, #120d09 100%),
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.02) 0, rgba(255,255,255,0.02) 1px, transparent 1px, transparent 18px);
+  border-radius: 8px;
+  border: 3px solid #0a0705;
+  box-shadow: 
+    inset 0 4px 15px rgba(0,0,0,0.9),
+    0 8px 25px rgba(0,0,0,0.8);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 18px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  box-sizing: border-box;
+}
+
+/* ==========================================================================
+   Pedal Slot & Header
+   ========================================================================== */
+.pedal-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.slot-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(10, 12, 16, 0.85);
+  border: 1px solid #2a313d;
+  border-radius: 4px;
+  padding: 2px 6px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.6);
+}
+
+.slot-fx-num {
+  font-size: 8px;
+  font-weight: 900;
+  color: #e5a93c;
+  letter-spacing: 0.5px;
+}
+
+.slot-fx-name {
+  font-size: 8px;
+  font-weight: 800;
+  color: #f1f5f9;
+}
+
+.slot-actions {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.slot-btn {
+  background: #181d24;
+  border: 1px solid #333c4d;
+  color: #94a3b8;
+  font-size: 7px;
+  padding: 1px 4px;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.slot-btn:hover {
+  color: #fff;
+  border-color: #e5a93c;
+}
+
+.slot-btn.del-btn:hover {
+  color: #ef4444;
+  border-color: #ef4444;
+}
+
+.slot-btn:disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+
+/* ==========================================================================
+   Boss Pedal Enclosure (Card format on rack)
+   ========================================================================== */
+.boss-pedal-card {
+  width: 165px;
+  height: 260px;
+  background-color: var(--pedal-color, #ea5b0c);
+  background-image: 
+    linear-gradient(145deg, rgba(255,255,255,0.25) 0%, rgba(0,0,0,0.3) 100%),
+    radial-gradient(circle at 50% 25%, rgba(255,255,255,0.18) 0%, transparent 65%);
+  border-radius: 12px 12px 8px 8px;
+  border: 2px solid rgba(0, 0, 0, 0.85);
+  box-shadow: 
+    0 12px 24px rgba(0, 0, 0, 0.85),
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.4),
+    inset 0 -3px 5px rgba(0, 0, 0, 0.6);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 7px 6px 5px 6px;
+  box-sizing: border-box;
+  transition: filter 0.15s ease;
+}
+
+.boss-pedal-card.pedal-bypassed {
+  filter: brightness(0.88);
+}
+
+.card-side-lbl {
+  position: absolute;
+  top: 98px;
+  font-size: 6.5px;
+  font-weight: 900;
+  color: #111;
+  letter-spacing: 0.4px;
+  line-height: 1.1;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.3);
+}
+
+.card-side-lbl.left-lbl { left: 7px; }
+.card-side-lbl.right-lbl { right: 7px; text-align: right; }
+
+/* Upper Well with Knobs */
+.card-upper-well {
+  height: 112px;
+  background: #111317;
+  background-image: linear-gradient(180deg, #090b0e 0%, #1a1e24 100%);
+  border-radius: 8px 8px 3px 3px;
+  border: 1.5px solid rgba(0, 0, 0, 0.9);
+  box-shadow: 
+    inset 0 3px 8px rgba(0, 0, 0, 0.9),
+    0 1px 2px rgba(255, 255, 255, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4px;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.card-upper-well.well-dd3 {
+  background: #123158;
+  background-image: linear-gradient(180deg, #0a1f38 0%, #19467d 100%);
+}
+
+/* Check LED */
+.card-led-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2px;
+}
+
+.card-led-ring {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1px solid #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-led {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: 1px solid #222;
+}
+
+.card-led.on {
+  background: radial-gradient(circle at 35% 35%, #fff 0%, #ff2222 40%, #cc0000 100%);
+  box-shadow: 0 0 10px rgba(255, 20, 20, 0.95);
+}
+
+.card-led.off {
+  background: #330808;
+}
+
+.card-led-txt {
+  font-size: 6px;
+  font-weight: 900;
+  color: #cbd5e1;
+  letter-spacing: 0.5px;
+}
+
+/* Knobs Area */
+.card-knobs-area {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.card-knobs-area.triangle-layout {
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.row-top { display: flex; justify-content: center; width: 100%; }
+.row-bot { display: flex; justify-content: space-around; width: 85%; }
+
+.card-knobs-area.inline-layout {
+  justify-content: space-around;
+  align-items: center;
+}
+
+.k-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+
+.k-lbl {
+  font-size: 6.5px;
+  font-weight: 900;
+  color: #f1f5f9;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+.k-wrap {
+  position: relative;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.inline-layout.count-4 .k-wrap {
+  width: 24px;
+  height: 24px;
+}
+
+.inline-layout.count-4 .rotary-knob.knob-boss {
+  width: 22px;
+  height: 22px;
+}
+
+.card-knobs-area .rotary-knob.knob-boss {
+  width: 26px;
+  height: 26px;
+}
+
+/* GE-7 Sliders in card */
+.ge7-sliders-layout {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.ge7-row {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.ge7-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ge7-track {
+  height: 55px;
+  display: flex;
+  align-items: center;
+}
+
+.ge7-range {
+  appearance: none;
+  writing-mode: vertical-lr;
+  direction: rtl;
+  width: 4px;
+  height: 50px;
+  background: #000;
+  border-radius: 2px;
+}
+
+.ge7-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 10px;
+  height: 6px;
+  background: #fff;
+  border-radius: 1px;
+  cursor: pointer;
+}
+
+.ge7-text {
+  font-size: 5.5px;
+  font-weight: 800;
+  color: #cbd5e1;
+}
+
+/* TU-2 Screen in card */
+.tu2-layout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.tu2-box {
+  width: 90px;
+  height: 65px;
+  background: #000;
+  border: 1px solid #333;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  padding: 2px;
+}
+
+.tu2-leds-bar {
+  font-size: 8px;
+  color: #00ff66;
+}
+
+.tu2-screen {
+  font-family: monospace;
+  font-size: 24px;
+  font-weight: 900;
+  color: #ff3333;
+}
+
+.tu2-tag {
+  font-size: 6px;
+  font-weight: 800;
+  color: #888;
+}
+
+/* Branding Name */
+.card-branding {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4px 0;
+  text-align: center;
+}
+
+.p-sub {
+  font-size: 6.5px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  color: #111;
+  text-transform: uppercase;
+}
+
+.p-title {
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.3px;
+  color: #111;
+  line-height: 1.1;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.3);
+}
+
+.type-ds1 .p-title,
+.type-ds2 .p-title,
+.type-bd2 .p-title,
+.type-ch1 .p-title,
+.type-cs3 .p-title,
+.type-tr2 .p-title,
+.type-rv5 .p-title,
+.type-ce2 .p-title,
+.type-bf2 .p-title,
+.type-frv1 .p-title,
+.type-dm2w .p-title,
+.type-ce2w .p-title,
+.type-cp1x .p-title,
+.type-ps6 .p-title,
+.type-rc3 .p-title,
+.type-mt2 .p-title,
+.type-rv6 .p-title,
+.type-oc3 .p-title {
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+}
+
+.type-mt2 .p-title, .type-mt2 .p-model {
+  color: #f97316 !important;
+  text-shadow: 0 0 4px rgba(249, 115, 22, 0.4);
+}
+
+.type-ds1 .p-title, .type-ds1 .p-model {
+  color: #fbbf24 !important;
+}
+
+.type-jb2 .p-title, .type-jb2 .p-model {
+  color: #0f172a !important;
+}
+
+.type-te2 .p-title, .type-te2 .p-model {
+  color: #0284c7 !important;
+}
+
+.p-model {
+  font-size: 9px;
+  font-weight: 900;
+  color: #111;
+}
+
+.type-ds1 .p-model,
+.type-ds2 .p-model,
+.type-bd2 .p-model,
+.type-ch1 .p-model,
+.type-cs3 .p-model,
+.type-tr2 .p-model,
+.type-rv5 .p-model,
+.type-ce2 .p-model,
+.type-bf2 .p-model,
+.type-frv1 .p-model,
+.type-dm2w .p-model,
+.type-ce2w .p-model,
+.type-cp1x .p-model,
+.type-ps6 .p-model,
+.type-rc3 .p-model,
+.type-rv6 .p-model,
+.type-oc3 .p-model {
+  color: #fff;
+}
+
+.p-waza {
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: 0.8px;
+  color: #e2e8f0;
+  background: #000;
+  padding: 1px 4px;
+  border-radius: 2px;
+  margin-top: 2px;
+  border: 1px solid #444;
+}
+
+/* Hinge */
+.card-hinge {
+  height: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+}
+
+.card-screw {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #eee 0%, #555 100%);
+  border: 1px solid #111;
+}
+
+/* Stomp Footpad */
+.card-stomp-pad {
+  flex: 1;
+  background: #111316;
+  border-radius: 4px 4px 6px 6px;
+  border: 1.5px solid rgba(0, 0, 0, 0.9);
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+  transition: transform 0.08s ease;
+}
+
+.card-stomp-pad:active {
+  transform: translateY(2px);
+}
+
+.card-rubber-tread {
+  flex: 1;
+  background-color: #181a1f;
+  background-image: repeating-linear-gradient(180deg, #101215 0px, #101215 3px, #20232a 3px, #20232a 5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 2px 5px rgba(0,0,0,0.8);
+}
+
+.card-boss-logo {
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: 3px;
+  color: #0c0d10;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.15), 0 -1px 1px rgba(0, 0, 0, 0.9);
+  padding: 2px 10px;
+  background: rgba(10, 12, 15, 0.8);
+  border-radius: 3px;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.card-thumbscrew-bar {
+  height: 14px;
+  background: #15171b;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-thumbscrew {
+  width: 18px;
+  height: 8px;
+  background: linear-gradient(90deg, #222 0%, #999 50%, #222 100%);
+  border-radius: 2px;
+  border: 1px solid #000;
+}
+
+/* ==========================================================================
+   Add Pedal Slot Button
+   ========================================================================== */
+.add-pedal-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding-top: 24px;
+}
+
+.add-slot-card {
+  width: 140px;
+  height: 250px;
+  background: rgba(22, 27, 36, 0.6);
+  border: 2px dashed #4b5563;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.add-slot-card:hover {
+  background: rgba(30, 41, 59, 0.8);
+  border-color: #e5a93c;
+  transform: translateY(-2px);
+}
+
+.add-slot-plus {
+  font-size: 36px;
+  font-weight: 300;
+  color: #e5a93c;
+}
+
+.add-slot-lbl {
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  color: #f1f5f9;
+}
+
+.add-slot-sub {
+  font-size: 9px;
+  color: #94a3b8;
+}

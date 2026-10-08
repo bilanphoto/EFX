@@ -1,0 +1,306 @@
+/* ==========================================================================
+   Bottom Studio Rack: Virtual Guitar Player & Transport
+   ========================================================================== */
+
+.guitar-player-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+/* Playback & Input Controls Strip */
+.player-controls-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #11141a;
+  border: 1px solid #282f3b;
+  padding: 6px 12px;
+  border-radius: 5px;
+  box-shadow: inset 0 2px 5px rgba(0,0,0,0.7);
+}
+
+.player-subgroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.group-title {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: var(--accent-gold);
+}
+
+.riff-select {
+  background: #1c222c;
+  border: 1px solid #374151;
+  color: #f1f5f9;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+}
+
+.riff-play-btn {
+  background: linear-gradient(180deg, #10b981 0%, #059669 100%);
+  border: 1px solid #34d399;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 4px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.4);
+}
+
+.riff-play-btn.playing {
+  background: linear-gradient(180deg, #ef4444 0%, #dc2626 100%);
+  border-color: #f87171;
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.6);
+}
+
+.bpm-control {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 9px;
+  font-weight: 800;
+  color: #94a3b8;
+}
+
+.bpm-input {
+  width: 48px;
+  background: #090c10;
+  border: 1px solid #333c4d;
+  color: #00ff66;
+  font-family: monospace;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 4px;
+  border-radius: 3px;
+  text-align: center;
+}
+
+.beat-light {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #2a1515;
+  border: 1px solid #441111;
+  transition: all 0.05s ease;
+}
+
+.beat-light.beat-on {
+  background: #ff2222;
+  box-shadow: 0 0 8px #ff0000;
+}
+
+/* Live Input & File Load */
+.live-input-group {
+  gap: 6px;
+}
+
+.mic-toggle-btn, .file-load-btn, .file-play-btn {
+  background: linear-gradient(180deg, #2a313d 0%, #1a1e25 100%);
+  border: 1px solid #475569;
+  color: #cbd5e1;
+  font-size: 9px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.mic-toggle-btn:hover, .file-load-btn:hover {
+  background: #333c4d;
+  color: #fff;
+  border-color: var(--accent-gold);
+}
+
+.mic-toggle-btn.active {
+  background: linear-gradient(180deg, #ef4444 0%, #b91c1c 100%);
+  border-color: #f87171;
+  color: #fff;
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.6);
+}
+
+.file-play-btn.active {
+  background: linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%);
+  color: #fff;
+  border-color: #60a5fa;
+}
+
+/* Quick Chords Strip */
+.chord-buttons-strip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.chord-title {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #94a3b8;
+  flex-shrink: 0;
+}
+
+.chords-grid {
+  display: flex;
+  gap: 5px;
+  overflow-x: auto;
+}
+
+.chord-btn {
+  background: linear-gradient(180deg, #28303d 0%, #191e26 100%);
+  border: 1px solid #3e495a;
+  border-radius: 4px;
+  color: #e2e8f0;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 10px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.6);
+  transition: all 0.08s ease;
+  white-space: nowrap;
+}
+
+.chord-btn:hover {
+  background: #374355;
+  border-color: var(--accent-gold);
+  color: #fff;
+}
+
+.chord-btn:active, .chord-btn.pressed {
+  transform: translateY(2px);
+  background: var(--accent-gold);
+  color: #111;
+  box-shadow: 0 0 8px rgba(229, 169, 60, 0.7);
+}
+
+.chord-btn.rock-chord {
+  border-color: #e65c00;
+  color: #ff9944;
+}
+
+/* Interactive Guitar Strings */
+.strings-stage {
+  height: 80px;
+  background: #0f1217;
+  border: 1px solid #232832;
+  border-radius: 6px;
+  display: flex;
+  overflow: hidden;
+  box-shadow: inset 0 2px 8px rgba(0,0,0,0.9);
+}
+
+.fret-headstock {
+  width: 90px;
+  background: linear-gradient(90deg, #1b2029 0%, #11141a 100%);
+  border-right: 3px solid #2d3748;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  flex-shrink: 0;
+}
+
+.headstock-label {
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  color: var(--accent-gold);
+  text-align: center;
+}
+
+.strings-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 4px 15px;
+}
+
+.guitar-string-row {
+  display: flex;
+  align-items: center;
+  height: 10px;
+  cursor: pointer;
+  position: relative;
+}
+
+.string-tag {
+  font-size: 8px;
+  font-weight: 800;
+  color: #64748b;
+  width: 22px;
+  flex-shrink: 0;
+}
+
+.guitar-string-row:hover .string-tag {
+  color: var(--accent-gold);
+}
+
+.string-wire {
+  flex: 1;
+  border-radius: 1px;
+  transition: transform 0.05s ease;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.8);
+}
+
+/* String Gauges (Thickness & Materials) */
+.gauge-e4 {
+  height: 1px;
+  background: linear-gradient(180deg, #f8fafc, #94a3b8);
+}
+
+.gauge-b3 {
+  height: 1.5px;
+  background: linear-gradient(180deg, #f1f5f9, #94a3b8);
+}
+
+.gauge-g3 {
+  height: 2px;
+  background: linear-gradient(180deg, #f1f5f9, #64748b);
+}
+
+.gauge-d3 {
+  height: 2.5px;
+  background: linear-gradient(180deg, #e2e8f0, #d4a742);
+}
+
+.gauge-a2 {
+  height: 3px;
+  background: linear-gradient(180deg, #f4d388, #9e731b);
+}
+
+.gauge-e2 {
+  height: 4px;
+  background: linear-gradient(180deg, #f4d388, #7a5412);
+}
+
+/* String Vibration Animation */
+@keyframes stringPluck {
+  0% { transform: translateY(0); }
+  20% { transform: translateY(-4px); filter: brightness(1.6); }
+  40% { transform: translateY(3px); }
+  60% { transform: translateY(-2px); }
+  80% { transform: translateY(1px); }
+  100% { transform: translateY(0); filter: brightness(1); }
+}
+
+.string-wire.vibrating {
+  animation: stringPluck 0.35s ease-out;
+}

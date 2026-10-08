@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boss Guitar Rig & Vintage Amps Studio</title>
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/pedals.css">
+  <link rel="stylesheet" href="css/amps.css">
+  <link rel="stylesheet" href="css/rack.css">
+</head>
+<body class="studio-app">
+
+  <!-- 1. Master Header (Top Studio Rack Bar) -->
+  <header class="master-header">
+    <div class="header-left">
+      <div class="brand-badge">
+        <span class="brand-title">VINTAGE RIG</span>
+        <span class="brand-sub">PRO GUITAR STUDIO</span>
+      </div>
+
+      <!-- Quick Snap Preset Buttons (1 - 8) -->
+      <div class="snap-presets-container">
+        <span class="snap-label">PRESET:</span>
+        <div class="snap-buttons-grid">
+          <button class="snap-preset-btn active" data-preset="0" title="Marshall DSL20 Modern Lead">1</button>
+          <button class="snap-preset-btn" data-preset="1" title="Fender Acoustasonic Chime">2</button>
+          <button class="snap-preset-btn" data-preset="2" title="Nirvana DS-2 Turbo Grunge">3</button>
+          <button class="snap-preset-btn" data-preset="3" title="Texas Blues (Fender + BD-2)">4</button>
+          <button class="snap-preset-btn" data-preset="4" title="Vintage Tremolo Surf (TR-2 + GE-7)">5</button>
+          <button class="snap-preset-btn" data-preset="5" title="Heavy Metal High Gain DS-1">6</button>
+          <button class="snap-preset-btn" data-preset="6" title="OS-2 Blended Color Crunch">7</button>
+          <button class="snap-preset-btn" data-preset="7" title="Ambient Dream Delay & Hall">8</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chromatic Tuner & Bottom Dock Toggle -->
+    <div class="header-center">
+      <div class="tuner-box" id="tuner-display">
+        <div class="tuner-scale">
+          <span class="flat-mark">♭</span>
+          <div class="tuner-meter">
+            <div class="tuner-center-line"></div>
+            <div class="tuner-needle" id="tuner-needle"></div>
+          </div>
+          <span class="sharp-mark">♯</span>
+        </div>
+        <div class="tuner-readout">
+          <span class="tuner-note" id="tuner-note">--</span>
+          <span class="tuner-cents" id="tuner-cents">0¢</span>
+        </div>
+        <button class="tuner-btn" id="tuner-toggle-btn">TUNER</button>
+      </div>
+
+      <button class="header-dock-btn active" id="header-dock-btn" title="สวิตช์เปิด/ปิด แถบเล่นกีตาร์และจอมอนิเตอร์ด้านล่าง (Toggle Bottom Dock)">
+        <span class="dock-btn-led"></span>
+        <span class="dock-btn-text">BOTTOM DOCK</span>
+      </button>
+    </div>
+
+    <!-- Master Levels & I/O -->
+    <div class="header-right">
+      <div class="save-status-wrap">
+        <div class="save-status-badge saved" id="save-status-badge" title="ระบบบันทึกค่าการตั้งค่าทุกอย่างโดยอัตโนมัติ">
+          <span class="save-dot">●</span> <span class="save-text">AUTO-SAVED</span>
+        </div>
+        <button class="reset-rig-btn reset-preset-btn" id="reset-preset-btn" title="รีเซ็ตพรีเซ็ตปัจจุบันกลับเป็นค่าเริ่มต้นโรงงาน (Reset Current Preset)">RESET PRESET</button>
+        <button class="reset-rig-btn reset-all-btn" id="reset-rig-btn" title="รีเซ็ตทุกพรีเซ็ตกลับเป็นค่าเริ่มต้นโรงงาน (Reset All Presets)">RESET ALL</button>
+      </div>
+
+      <div class="io-volume-strip">
+        <div class="vol-control">
+          <label for="input-volume">IN</label>
+          <input type="range" id="input-volume" min="0" max="2.5" step="0.05" value="1.0" class="mini-fader">
+        </div>
+        <div class="vol-control">
+          <label for="master-volume">MASTER</label>
+          <input type="range" id="master-volume" min="0" max="1.5" step="0.05" value="0.85" class="mini-fader">
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Scrollable Studio Stage -->
+  <div class="studio-main-scroll">
+
+    <!-- 2. PEDALBOARD RACK (AmpliTube Style - Top Floor) -->
+    <section class="studio-section pedalboard-section">
+      <div class="section-banner">
+        <div class="banner-title-group">
+          <span class="banner-icon">🎸</span>
+          <span class="banner-text">PEDALBOARD RACK</span>
+          <span class="banner-sub">Boss Stompboxes In Series (Signal Flows Left to Right)</span>
+        </div>
+        <button class="banner-btn" id="add-effect-top-btn">+ ADD EFFECT</button>
+      </div>
+      <div class="pedalboard-container" id="pedalboard-container">
+        <!-- Rendered by PedalBoardUI -->
+      </div>
+    </section>
+
+    <!-- 3. GUITAR AMPLIFIER (Marshall / Fender - Lower Floor) -->
+    <section class="studio-section amplifier-section">
+      <div class="section-banner">
+        <div class="banner-title-group">
+          <span class="banner-icon">📢</span>
+          <span class="banner-text">GUITAR AMPLIFIER & CABINET</span>
+          <span class="banner-sub">Tube Preamp, Tone Stack, Power Amp & Cabinet Emulation</span>
+        </div>
+      </div>
+      <div class="amplifier-container" id="amplifier-container">
+        <!-- Rendered by AmpView -->
+      </div>
+    </section>
+
+  </div>
+
+  <!-- 4. BOTTOM STUDIO DOCK (Playback, Chords, Strings, Monitor) -->
+  <div class="bottom-dock-wrapper" id="bottom-dock-wrapper">
+    <!-- Collapsible Bar Handle with Switch -->
+    <div class="dock-toggle-bar">
+      <button class="dock-toggle-handle active" id="dock-toggle-handle" title="สวิตช์เปิด/ปิด แถบเล่นกีตาร์และจอมอนิเตอร์ด้านล่าง (Toggle Bottom Dock)">
+        <span class="dock-handle-switch">
+          <span class="dock-switch-knob"></span>
+        </span>
+        <span class="dock-handle-label">🎸 GUITAR PLAYER & MONITOR</span>
+        <span class="dock-handle-state" id="dock-handle-state">ON</span>
+        <span class="dock-handle-arrow" id="dock-handle-arrow">▼</span>
+      </button>
+    </div>
+
+    <footer class="bottom-studio-dock" id="bottom-studio-dock">
+      <!-- Virtual Guitar Player (Chords, Strings, Riff Player, Input) -->
+      <div class="dock-player-col" id="guitar-player-container">
+        <!-- Rendered by GuitarPlayerUI -->
+      </div>
+
+      <!-- Real-time CRT Phosphor Monitor (Oscilloscope & FFT Spectrum) -->
+      <div class="dock-visualizer-col">
+        <div class="crt-screen-frame">
+          <div class="crt-header">
+            <span class="crt-title">SIGNAL MONITOR</span>
+            <button class="crt-mode-btn" id="scope-mode-btn">OSCILLOSCOPE</button>
+          </div>
+          <canvas id="visualizer-canvas" class="crt-canvas"></canvas>
+          <div class="crt-scanline-overlay"></div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- 5. ADD PEDAL MODAL (Shows all 12+ Boss Pedals from User's Image) -->
+  <div class="modal-backdrop" id="add-pedal-modal">
+    <div class="modal-window">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <span class="modal-icon">🎛️</span>
+          <h3>BOSS PEDAL LIBRARY</h3>
+        </div>
+        <button class="modal-close" id="modal-close-btn">✕</button>
+      </div>
+      <div class="modal-subtitle">เลือกเอฟเฟค Boss เพื่อนำมาต่อบนบอร์ดเอฟเฟค (Signal Chain)</div>
+      <div class="modal-pedals-grid" id="modal-pedals-grid">
+        <!-- Pedal Cards Rendered Here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="preset-toast" id="preset-toast"></div>
+
+  <!-- JavaScript Modules -->
+  <script src="js/audio/audio-context.js"></script>
+  <script src="js/audio/guitar-synth.js"></script>
+  <script src="js/audio/demo-riffs.js"></script>
+  <script src="js/audio/cabinet-sim.js"></script>
+  <script src="js/audio/pedal-nodes.js"></script>
+  <script src="js/audio/amp-nodes.js"></script>
+  <script src="js/audio/tuner.js"></script>
+
+  <script src="js/state/presets.js"></script>
+  <script src="js/state/chain-state.js"></script>
+
+  <script src="js/ui/knob.js"></script>
+  <script src="js/ui/visualizer.js"></script>
+  <script src="js/ui/pedal-board-ui.js"></script>
+  <script src="js/ui/amp-view.js"></script>
+  <script src="js/ui/guitar-player-ui.js"></script>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

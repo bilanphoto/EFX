@@ -1,0 +1,675 @@
+/* ==========================================================================
+   Hyper-Realistic Guitar Amplifiers & Knobs Styling
+   Supports: Marshall DSL20, Fender Acoustasonic 15, Fender '65 Twin, Marshall JCM800
+   ========================================================================== */
+
+/* Container & Toolbar */
+.amp-section-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.amp-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 960px;
+  background: #14181f;
+  border: 1px solid #2a313d;
+  padding: 6px 14px;
+  border-radius: 6px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.amp-toolbar-left, .amp-toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.amp-toolbar label {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #e5a93c;
+}
+
+.amp-model-select, .amp-cab-select, .amp-mic-select {
+  background: #1e242e;
+  border: 1px solid #3d4757;
+  color: #f1f5f9;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+}
+
+.amp-model-select:hover, .amp-cab-select:hover {
+  border-color: #e5a93c;
+}
+
+/* ==========================================================================
+   Amp Cabinet Base Frame
+   ========================================================================== */
+.amp-chassis-box {
+  width: 100%;
+  max-width: 960px;
+  height: 290px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.9),
+    0 6px 15px rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* ==========================================================================
+   1. Marshall DSL20 Combo (Exact Match to User's Image 2)
+   ========================================================================== */
+.amp-chassis-box.marshall_dsl20 {
+  background: #111316;
+  background-image: 
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,0.03) 0%, transparent 80%),
+    repeating-linear-gradient(135deg, #0e1013 0, #0e1013 3px, #181b20 3px, #181b20 6px);
+  border: 10px solid #0d0f12;
+  border-radius: 12px;
+}
+
+.dsl20-frame {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+/* Top Leather Handle */
+.dsl20-top-handle {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 160px;
+  height: 10px;
+  background: #000;
+  border-radius: 3px;
+  border: 1px solid #333;
+  z-index: 10;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.8);
+}
+
+/* Heavy Metal Corner Protectors */
+.dsl-corner {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  background: #08090a;
+  border: 1px solid #222;
+  z-index: 10;
+}
+.c-tl { top: -10px; left: -10px; border-radius: 8px 0 0 0; }
+.c-tr { top: -10px; right: -10px; border-radius: 0 8px 0 0; }
+.c-bl { bottom: -10px; left: -10px; border-radius: 0 0 0 8px; }
+.c-br { bottom: -10px; right: -10px; border-radius: 0 0 8px 0; }
+
+/* Brushed Gold Faceplate */
+.dsl20-gold-faceplate {
+  height: 105px;
+  background: linear-gradient(180deg, #f7d98d 0%, #d4a742 40%, #a87e22 100%);
+  border-top: 2px solid #ffe8a8;
+  border-bottom: 4px solid #000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+  position: relative;
+  box-shadow: inset 0 2px 4px rgba(255,255,255,0.5), 0 4px 10px rgba(0,0,0,0.6);
+  flex-shrink: 0;
+}
+
+.dsl-input-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  margin-right: 4px;
+}
+
+.quarter-jack {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #000 35%, #888 55%, #333 100%);
+  border: 1px solid #111;
+  box-shadow: inset 0 1px 3px #000;
+}
+
+.dsl-sec {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+  border-right: 1px solid rgba(0, 0, 0, 0.15);
+  padding: 0 6px;
+}
+
+.dsl-bracket-lbl {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 7.5px;
+  font-weight: 900;
+  letter-spacing: 0.8px;
+  color: #1a1204;
+  white-space: nowrap;
+}
+
+.dsl-knob-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+
+.dsl-lbl {
+  font-size: 7px;
+  font-weight: 900;
+  color: #1a1204;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.dsl-lbl.red-lbl {
+  color: #b91c1c;
+}
+
+.dsl-push-btn-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  margin: 0 2px;
+}
+
+.dsl-round-btn {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #111;
+  border: 1px solid #333;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.8);
+}
+
+.dsl-round-btn.pressed {
+  background: #b91c1c;
+  box-shadow: 0 0 6px #ef4444;
+}
+
+.dsl-switches-col {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 4px;
+}
+
+.red-rocker-lamp.on {
+  width: 15px;
+  height: 22px;
+  background: linear-gradient(180deg, #ff3333 0%, #aa0000 100%);
+  border-radius: 2px;
+  border: 1px solid #222;
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.9);
+}
+
+.black-rocker-btn {
+  width: 13px;
+  height: 22px;
+  background: #111;
+  border-radius: 2px;
+  border: 1px solid #333;
+}
+
+.dsl20-badge-text {
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.8px;
+  color: #1a1204;
+}
+
+/* Marshall Speaker Grille & Large Script Logo */
+.dsl20-grille {
+  flex: 1;
+  background: #0a0b0e;
+  background-image: repeating-linear-gradient(45deg, #18191c 0, #18191c 2px, #08090a 2px, #08090a 4px);
+  border-top: 4px solid #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: inset 0 5px 20px rgba(0,0,0,0.9);
+}
+
+.marshall-large-script {
+  font-family: "Brush Script MT", "Snell Roundhand", cursive;
+  font-size: 68px;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: 2px;
+  text-shadow: 0 4px 12px rgba(0,0,0,0.95);
+}
+
+/* ==========================================================================
+   2. Fender Acoustasonic 15 (Exact Match to User's Image 1)
+   ========================================================================== */
+.amp-chassis-box.fender_acoustasonic {
+  background: #c2b195;
+  background-image: 
+    radial-gradient(ellipse at 50% 50%, rgba(255,255,255,0.15) 0%, transparent 80%),
+    repeating-linear-gradient(45deg, #b8a586 0, #b8a586 2px, #c8b99d 2px, #c8b99d 4px);
+  border: 12px solid #b29f80;
+  border-radius: 16px;
+}
+
+.acoustasonic-frame {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.acoustasonic-faceplate {
+  height: 105px;
+  background: linear-gradient(180deg, #3d2b24 0%, #261914 40%, #170d0a 100%);
+  border: 2px solid #5a4136;
+  border-bottom: 4px solid #0f0806;
+  box-shadow: inset 0 2px 4px rgba(255,255,255,0.15), 0 4px 8px rgba(0,0,0,0.8);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.sec-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  padding: 2px 6px;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.sec-title {
+  position: absolute;
+  top: -12px;
+  left: 6px;
+  font-size: 7.5px;
+  font-weight: 900;
+  letter-spacing: 0.8px;
+  color: #dfd2be;
+  text-shadow: 0 1px 1px #000;
+}
+
+.face-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.jack-lbl {
+  font-size: 7px;
+  font-weight: 800;
+  color: #c9baa1;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.xlr-jack {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #111;
+  border: 2px solid #555;
+  box-shadow: inset 0 2px 4px #000;
+  position: relative;
+}
+
+.xlr-jack::before {
+  content: '•••';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  color: #aaa;
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+
+.acoustasonic-branding {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 6px;
+}
+
+.acou-script {
+  font-family: "Brush Script MT", "Caveat", cursive;
+  font-size: 16px;
+  font-weight: 700;
+  color: #f1ebd8;
+  letter-spacing: 0.5px;
+  text-shadow: 0 1px 2px #000;
+}
+
+.acou-red-led.on {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ff2222;
+  box-shadow: 0 0 8px #ff0000;
+  border: 1px solid #222;
+}
+
+.fender-rocker-switch {
+  width: 14px;
+  height: 22px;
+  background: #000;
+  border-radius: 2px;
+  border: 1px solid #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.rocker-paddle {
+  font-size: 10px;
+  font-weight: 900;
+  color: #fff;
+}
+
+.acoustasonic-grille {
+  flex: 1;
+  background: repeating-linear-gradient(45deg, #18191c 0, #18191c 2px, #0b0c0e 2px, #0b0c0e 4px);
+  border-top: 4px solid #000;
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding-left: 40px;
+  box-shadow: inset 0 5px 15px rgba(0,0,0,0.85);
+}
+
+.fender-slant-logo {
+  font-family: "Brush Script MT", "Caveat", cursive;
+  font-size: 62px;
+  font-weight: 700;
+  color: #ffffff;
+  transform: rotate(-18deg);
+  text-shadow: 2px 2px 0 #111, 4px 6px 12px rgba(0,0,0,0.9);
+  position: relative;
+}
+
+.fender-slant-logo::after {
+  content: '';
+  position: absolute;
+  bottom: 8px;
+  left: 20px;
+  width: 130px;
+  height: 3px;
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.8);
+}
+
+/* ==========================================================================
+   3. Fender '65 Twin Reverb Blackface
+   ========================================================================== */
+.amp-chassis-box.fender_twin {
+  background: #121417;
+  border: 10px solid #0a0c0e;
+  border-radius: 10px;
+}
+
+.fender-upper-baffle {
+  height: 65px;
+  background: repeating-linear-gradient(45deg, #3d434d 0, #3d434d 2px, #20242b 2px, #20242b 4px);
+  border-bottom: 4px solid #0a0c0e;
+  display: flex;
+  align-items: center;
+  padding: 0 25px;
+  box-shadow: inset 0 3px 10px rgba(0,0,0,0.8);
+}
+
+.fender-logo-script {
+  font-family: "Brush Script MT", "Caveat", cursive;
+  font-size: 32px;
+  font-weight: 700;
+  color: #f1f5f9;
+  transform: rotate(-5deg);
+  text-shadow: 2px 2px 5px rgba(0,0,0,0.9);
+}
+
+.fender-faceplate {
+  flex: 1;
+  background: linear-gradient(180deg, #d1d5db 0%, #9ca3af 20%, #4b5563 80%, #1f2937 100%);
+  border-top: 2px solid #fff;
+  border-bottom: 3px solid #000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  box-shadow: inset 0 2px 4px rgba(255,255,255,0.4);
+}
+
+.faceplate-brand-area {
+  font-family: "Times New Roman", serif;
+  font-size: 15px;
+  font-weight: 800;
+  color: #111827;
+  letter-spacing: 1px;
+}
+
+.faceplate-controls-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  justify-content: center;
+}
+
+.amp-knob-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.amp-label {
+  font-size: 8px;
+  font-weight: 900;
+  color: #111827;
+  letter-spacing: 0.6px;
+}
+
+.fender-pilot-lamp.active .jewel-lens {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #fff 0%, #ff2222 40%, #880000 100%);
+  box-shadow: 0 0 12px rgba(255, 20, 20, 0.95), 0 0 25px rgba(255, 50, 50, 0.7);
+  border: 1px solid #444;
+}
+
+/* ==========================================================================
+   4. Marshall JCM800 2203
+   ========================================================================== */
+.amp-chassis-box.marshall_jcm800 {
+  background: #111316;
+  border: 10px solid #0d0f12;
+  border-radius: 10px;
+}
+
+.marshall-upper-baffle {
+  height: 70px;
+  background: #0f1114;
+  border-bottom: 4px solid #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.marshall-script-logo {
+  font-family: "Brush Script MT", "Snell Roundhand", cursive;
+  font-size: 48px;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: 2px;
+  text-shadow: 0 4px 10px rgba(0,0,0,0.9);
+}
+
+.marshall-faceplate.jcm-faceplate {
+  flex: 1;
+  background: linear-gradient(180deg, #f7d98d 0%, #d4a742 40%, #a87e22 100%);
+  border-top: 2px solid #ffe8a8;
+  border-bottom: 3px solid #000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+
+.marshall-badge-text {
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  color: #1a1204;
+}
+
+.marshall-power-switch .rocker-lamp {
+  width: 15px;
+  height: 24px;
+  background: linear-gradient(180deg, #ff3333 0%, #aa0000 100%);
+  border-radius: 2px;
+  border: 1px solid #222;
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.9);
+}
+
+/* ==========================================================================
+   MANDATORY ROTARY KNOBS STYLING (ALL AMP & COMBO MODELS)
+   ========================================================================== */
+.knob-host, .amp-knob-holder {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Base Rotary Knob */
+.rotary-knob {
+  position: relative;
+  border-radius: 50%;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+  box-sizing: border-box;
+}
+
+.rotary-knob:active, .rotary-knob.active {
+  cursor: grabbing;
+}
+
+.rotary-knob .knob-pointer {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  transition: transform 0.04s linear;
+}
+
+/* 1. Marshall Gold Top-Hat Knobs (.knob-marshall-gold) */
+.rotary-knob.knob-marshall-gold {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, #ffeaa7 0%, #d4a742 30%, #1a1b1f 33%, #0c0d10 100%);
+  border: 1.5px solid #000;
+  box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.8),
+    inset 0 1px 2px rgba(255, 255, 255, 0.5),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.9);
+}
+
+.rotary-knob.knob-marshall-gold .knob-pointer::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 8px;
+  background: #ffffff;
+  border-radius: 1px;
+  box-shadow: 0 0 2px #000;
+}
+
+/* 2. Fender Skirted Numbered Knobs (.knob-fender) */
+.rotary-knob.knob-fender {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, #e2e8f0 0%, #94a3b8 25%, #1e293b 28%, #090d14 100%);
+  border: 1.5px solid #000;
+  box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.8),
+    inset 0 1px 2px rgba(255, 255, 255, 0.6);
+}
+
+.rotary-knob.knob-fender .knob-pointer::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 8px;
+  background: #ffffff;
+  border-radius: 1px;
+}
+
+/* 3. Black Boss / Combo Knobs (.knob-boss) */
+.rotary-knob.knob-boss {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, #d8dde3 0%, #88929e 25%, #181b20 28%, #0e1114 100%);
+  border: 1.5px solid #000;
+  box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.8),
+    inset 0 1px 2px rgba(255, 255, 255, 0.4);
+}
+
+.rotary-knob.knob-boss .knob-pointer::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 8px;
+  background: #ffffff;
+  border-radius: 1px;
+  box-shadow: 0 0 2px #000;
+}

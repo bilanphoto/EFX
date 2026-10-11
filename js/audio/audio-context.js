@@ -142,9 +142,18 @@ class AudioEngine {
   }
 
   setMasterVolume(val) {
+    this.masterVolume = Math.max(0, Math.min(1.5, val));
     if (!this.masterGain || !this.ctx) return;
-    const clamped = Math.max(0, Math.min(1.5, val));
-    this.masterGain.gain.setTargetAtTime(clamped, this.ctx.currentTime, 0.02);
+    if (this.isTunerMuted) return;
+    this.masterGain.gain.setTargetAtTime(this.masterVolume, this.ctx.currentTime, 0.02);
+  }
+
+  setTunerMute(isMuted) {
+    this.isTunerMuted = !!isMuted;
+    if (this.masterGain && this.ctx) {
+      const vol = isMuted ? 0.0 : (this.masterVolume !== undefined ? this.masterVolume : 0.85);
+      this.masterGain.gain.setTargetAtTime(vol, this.ctx.currentTime, 0.02);
+    }
   }
 
   setInputVolume(val) {

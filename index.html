@@ -28,7 +28,7 @@
           <div class="brand-text-col">
             <div class="brand-title-row">
               <span class="brand-title">VINTAGE RIG</span>
-              <span class="app-version-pill" id="header-version-pill">V1.1.1</span>
+              <span class="app-version-pill" id="header-version-pill">V1.1.2</span>
               <button class="brand-info-btn" id="app-info-btn" aria-label="App Information" title="ข้อมูลแอพ & เวอร์ชั่น (About App)">ℹ️</button>
             </div>
             <span class="brand-sub">PRO GUITAR STUDIO</span>
@@ -54,6 +54,12 @@
 
     <!-- Studio Tools & Settings Dropdown Menu (Consolidates Tuner, Levels, Dock, Reset) -->
     <div class="header-right">
+      <!-- Stage Tuner Quick Launch Button -->
+      <button class="header-tuner-btn" id="header-stage-tuner-btn" title="เปิดหน้าต่างตั้งสายกีตาร์ความแม่นยำสูงขนาดใหญ่ (Pro Stage Guitar Tuner Modal)">
+        <span class="btn-tuner-icon">🎯</span>
+        <span class="btn-tuner-text">TUNER</span>
+      </button>
+
       <div class="studio-menu-container">
         <button class="studio-menu-btn" id="studio-menu-btn" title="เครื่องมือและการตั้งค่าสตูดิโอ (Tools & Studio Settings)">
           <span class="menu-icon">⚙️</span>
@@ -82,7 +88,7 @@
           <!-- 2. Chromatic Tuner -->
           <div class="menu-section">
             <div class="menu-section-title">CHROMATIC TUNER</div>
-            <div class="tuner-box" id="tuner-display">
+            <div class="tuner-box" id="tuner-display" title="คลิกเพื่อเปิดหน้าต่างตั้งสายขนาดใหญ่ (Click to Open Large Stage Tuner)">
               <div class="tuner-scale">
                 <span class="flat-mark">♭</span>
                 <div class="tuner-meter">
@@ -95,7 +101,10 @@
                 <span class="tuner-note" id="tuner-note">--</span>
                 <span class="tuner-cents" id="tuner-cents">0¢</span>
               </div>
-              <button class="tuner-btn" id="tuner-toggle-btn">TUNER</button>
+              <div class="tuner-actions-mini">
+                <button class="tuner-btn" id="tuner-toggle-btn" title="เปิด/ปิดการตรวจจับเสียงตั้งสาย">TUNER</button>
+                <button class="tuner-expand-btn" id="tuner-open-modal-btn" title="ขยายหน้าต่างตั้งสายขนาดใหญ่ (Open Stage Tuner Modal)">⛶</button>
+              </div>
             </div>
           </div>
 
@@ -224,7 +233,7 @@
             <h3 class="info-app-title">VINTAGE RIG PRO GUITAR STUDIO</h3>
             <div class="info-version-tag">
               <span class="version-label">VERSION</span>
-              <span class="version-number" id="info-version-display">V1.1.1</span>
+              <span class="version-number" id="info-version-display">V1.1.2</span>
               <span class="version-badge" id="info-status-badge">LATEST</span>
             </div>
           </div>
@@ -281,7 +290,7 @@
               <span class="update-icon">🔄</span>
               <div>
                 <div class="update-title">ระบบจัดการและตรวจสอบเวอร์ชั่น (Version Management)</div>
-                <div class="update-sub">เวอร์ชั่นปัจจุบัน: <strong id="info-current-ver-text">V1.1.1</strong></div>
+                <div class="update-sub">เวอร์ชั่นปัจจุบัน: <strong id="info-current-ver-text">V1.1.2</strong></div>
               </div>
             </div>
             <div class="update-actions">
@@ -289,13 +298,13 @@
                 <span class="btn-spinner" id="update-spinner"></span>
                 <span>ตรวจเช็คการอัปเดต</span>
               </button>
-              <button class="info-bump-btn" id="bump-version-btn" title="เพิ่มเวอร์ชั่นถัดไป (เช่น V1.1.1 -> V1.1.2)">
+              <button class="info-bump-btn" id="bump-version-btn" title="เพิ่มเวอร์ชั่นถัดไป (เช่น V1.1.2 -> V1.1.3)">
                 <span>+ เพิ่มเวอร์ชั่น (Bump)</span>
               </button>
             </div>
           </div>
           <div class="update-status-msg" id="update-status-msg">
-            ระบบทำงานบนเวอร์ชั่นล่าสุด V1.1.1 แล้ว
+            ระบบทำงานบนเวอร์ชั่นล่าสุด V1.1.2 แล้ว
           </div>
         </div>
 
@@ -305,6 +314,154 @@
           <div class="changelog-list" id="changelog-list">
             <!-- Rendered by js/version.js -->
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. PRO STAGE GUITAR TUNER MODAL (Large Precision Strobe & Needle Tuner) -->
+  <div class="modal-backdrop" id="stage-tuner-modal">
+    <div class="modal-window stage-tuner-window">
+      <!-- Modal Header -->
+      <div class="modal-header stage-tuner-header">
+        <div class="modal-title-wrap">
+          <span class="modal-icon">🎸</span>
+          <div class="stage-tuner-title-group">
+            <h3>PRO STAGE GUITAR TUNER</h3>
+            <span class="stage-tuner-sub">ระบบตั้งสายกีตาร์ความแม่นยำสูง • Precision Pitch & Strobe Meter</span>
+          </div>
+        </div>
+        <div class="stage-tuner-top-actions">
+          <!-- Mute Guitar Audio Out While Tuning -->
+          <button class="tuner-mute-btn" id="stage-tuner-mute-btn" title="ปิดเสียงออกลำโพงชั่วขณะตอนตั้งสาย (Mute Audio Output)">
+            <span class="mute-led" id="stage-mute-led"></span>
+            <span class="mute-text">MUTE OUT</span>
+          </button>
+          <button class="modal-close" id="stage-tuner-close-btn" aria-label="Close Tuner">✕</button>
+        </div>
+      </div>
+
+      <div class="stage-tuner-body">
+        <!-- Controls Bar: Tuning Preset, Reference Pitch, Sensitivity -->
+        <div class="stage-tuner-toolbar">
+          <div class="tuner-tool-item">
+            <label for="stage-tuning-preset">TUNING PRESET:</label>
+            <select id="stage-tuning-preset" class="tuner-select">
+              <option value="standard" selected>Standard (E A D G B E)</option>
+              <option value="drop_d">Drop D (D A D G B E)</option>
+              <option value="half_step_down">Half-Step Down / Eb (Eb Ab Db Gb Bb Eb)</option>
+              <option value="full_step_down">Full-Step Down / D (D G C F A D)</option>
+              <option value="open_d">Open D (D A D F# A D)</option>
+              <option value="open_g">Open G (D G D G B D)</option>
+              <option value="dadgad">DADGAD (D A D G A D)</option>
+              <option value="chromatic">Chromatic (All 12 Notes)</option>
+            </select>
+          </div>
+
+          <div class="tuner-tool-item">
+            <label for="stage-a4-ref">REFERENCE A4:</label>
+            <select id="stage-a4-ref" class="tuner-select">
+              <option value="440" selected>440 Hz (Concert Pitch)</option>
+              <option value="432">432 Hz (Verdi Tuning)</option>
+              <option value="442">442 Hz (European Standard)</option>
+              <option value="444">444 Hz (Bright Solo)</option>
+            </select>
+          </div>
+
+          <div class="tuner-tool-item">
+            <label for="stage-noise-filter">SENSITIVITY:</label>
+            <select id="stage-noise-filter" class="tuner-select">
+              <option value="normal" selected>Normal (Standard Pickups)</option>
+              <option value="high">High (Low Output / Acoustic)</option>
+              <option value="low">Low (High Gain / Active Pickups)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Big Center Stage Visual Display -->
+        <div class="stage-tuner-hero-card" id="stage-hero-card">
+          <!-- 3-Phase Guidance Lights (FLAT - IN TUNE - SHARP) -->
+          <div class="stage-guidance-bar">
+            <div class="guidance-indicator guidance-flat" id="guide-flat">
+              <span class="guide-arrows">◀◀</span>
+              <span class="guide-text">FLAT (หย่อน)</span>
+            </div>
+            <div class="guidance-indicator guidance-perfect" id="guide-perfect">
+              <span class="perfect-ring">●</span>
+              <span class="guide-text">IN TUNE (ตรงคีย์)</span>
+            </div>
+            <div class="guidance-indicator guidance-sharp" id="guide-sharp">
+              <span class="guide-text">SHARP (ตึง)</span>
+              <span class="guide-arrows">▶▶</span>
+            </div>
+          </div>
+
+          <!-- Giant Note Display with Octave and Stability Badge -->
+          <div class="stage-note-container">
+            <div class="stage-note-display">
+              <span class="stage-note-letter" id="stage-note-letter">--</span>
+              <span class="stage-note-accidental" id="stage-note-accidental"></span>
+              <span class="stage-note-octave" id="stage-note-octave"></span>
+            </div>
+            <div class="stage-status-pill pill-idle" id="stage-status-pill">
+              <span class="pill-dot" id="stage-pill-dot">●</span>
+              <span class="pill-text" id="stage-pill-text">พร้อมตั้งสาย • กรุณาดีดสายกีตาร์ (PLUCK STRING)</span>
+            </div>
+          </div>
+
+          <!-- Giant Arc Needle Meter & Strobe Scale -->
+          <div class="stage-arc-meter">
+            <div class="meter-scale-marks">
+              <span class="mark-label mark-n50">-50¢</span>
+              <span class="mark-label mark-n30">-30</span>
+              <span class="mark-label mark-n20">-20</span>
+              <span class="mark-label mark-n10">-10</span>
+              <span class="mark-label mark-center">0¢</span>
+              <span class="mark-label mark-p10">+10</span>
+              <span class="mark-label mark-p20">+20</span>
+              <span class="mark-label mark-p30">+30</span>
+              <span class="mark-label mark-p50">+50¢</span>
+            </div>
+
+            <!-- Graduated Meter Face -->
+            <div class="meter-dial-track">
+              <div class="meter-center-zone"></div>
+              <div class="meter-center-hairline"></div>
+              <div class="stage-meter-needle" id="stage-meter-needle"></div>
+            </div>
+
+            <!-- Segmented LED Bar Array (21 LEDs) -->
+            <div class="stage-led-segments-row" id="stage-led-segments-row"></div>
+          </div>
+
+          <!-- Precision Numeric Readouts -->
+          <div class="stage-readout-strip">
+            <div class="stage-stat-item">
+              <span class="stat-label">CENTS OFFSET</span>
+              <span class="stat-value cents-val" id="stage-cents-val">0.0 ¢</span>
+            </div>
+            <div class="stage-stat-item">
+              <span class="stat-label">CURRENT FREQ</span>
+              <span class="stat-value freq-val" id="stage-freq-val">-- Hz</span>
+            </div>
+            <div class="stage-stat-item">
+              <span class="stat-label">TARGET PITCH</span>
+              <span class="stat-value target-val" id="stage-target-val">-- Hz</span>
+            </div>
+            <div class="stage-stat-item">
+              <span class="stat-label">DIFFERENCE</span>
+              <span class="stat-value diff-val" id="stage-diff-val">-- Hz</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6-String Target Selector & Ear Reference Buttons -->
+        <div class="stage-strings-card">
+          <div class="strings-card-header">
+            <span class="strings-header-title">🎸 6-STRING TARGETS (ตรวจจับอัตโนมัติ / คลิกเพื่อฟังเสียง):</span>
+            <span class="strings-header-hint">AUTO STRING DETECT &amp; TONE REFERENCE</span>
+          </div>
+          <div class="stage-strings-grid" id="stage-strings-grid"></div>
         </div>
       </div>
     </div>
@@ -330,6 +487,7 @@
   <script src="js/ui/pedal-board-ui.js"></script>
   <script src="js/ui/amp-view.js"></script>
   <script src="js/ui/guitar-player-ui.js"></script>
+  <script src="js/ui/stage-tuner-ui.js"></script>
 
   <script src="js/version.js"></script>
   <script src="js/app.js"></script>

@@ -5,10 +5,23 @@
 (function(window) {
   'use strict';
 
-  const DEFAULT_VERSION = 'V1.1.1';
+  const DEFAULT_VERSION = 'V1.1.2';
   const APP_NAME = 'VINTAGE RIG PRO GUITAR STUDIO';
 
   const CHANGELOG = [
+    {
+      version: 'V1.1.2',
+      date: '2026-10-11',
+      title: 'Pro Stage Tuner Modal & Anti-Flicker Pitch Engine',
+      items: [
+        'แก้ปัญหาตัวโน้ต A-G และความถี่กระพริบ (Anti-Flicker): เพิ่มวงจรกรองความถี่ Lowpass 750Hz ตัดเสียงฮาร์โมนิคกวน และ McLeod Pitch Method ตรวจจับระดับเสียง fundamental อย่างแม่นยำ',
+        'ระบบค้างโน้ตและค่าความถี่นิ่งสนิท (Note-Hold Grace Period 1.8s): โน้ตและความถี่จะค้างอยู่อย่างนิ่งชัดเจนหลังดีดสาย ไม่กระพริบวูบวาบหรือหายไปแบบเดิม',
+        'เพิ่มหน้าต่างโมดอลตั้งสายขนาดใหญ่ (Pro Stage Guitar Tuner Modal): หน้าจอจูนเนอร์ขนาดใหญ่สไตล์โปร มีตัวอักษรโน้ตขนาดยักษ์ (80px), เข็มวัดแอนะล็อกความแม่นยำสูง และหลอดไฟ LED 21 ช่อง',
+        'ไฟแนะนำการหมุนลูกบิด 3 ทิศทาง: FLAT (หย่อน) ◀◀, IN TUNE (ตรงคีย์) ●, และ SHARP (ตึง) ▶▶',
+        'ปุ่มทางลัดตั้งสาย 6 สายกีตาร์ (6-String Targets): ไฮไลท์สายที่กำลังดีดโดยอัตโนมัติ พร้อมปุ่มฟังเสียงเทียบเสียงต้นแบบ (Reference Tone)',
+        'ปุ่ม MUTE OUT ปิดเสียงลำโพงขณะตั้งสายบนเวที และพรีเซ็ตตั้งสายยอดนิยม 8 แบบ (Standard, Drop D, Half-Step Down, Full-Step Down, Open D, Open G, DADGAD, Chromatic)'
+      ]
+    },
     {
       version: 'V1.1.1',
       date: '2026-10-11',

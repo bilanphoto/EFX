@@ -209,46 +209,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     chainState.scheduleSave();
   });
 
-  // Chromatic Tuner
-  let tunerActive = false;
-  tunerToggleBtn.addEventListener('click', async () => {
-    await engine.resume();
-    tunerActive = !tunerActive;
-    if (tunerActive) {
-      tunerToggleBtn.classList.add('active');
-      tuner.start();
-    } else {
-      tunerToggleBtn.classList.remove('active');
-      tuner.stop();
-      tunerNote.innerText = '--';
-      tunerCents.innerText = '0¢';
-      tunerNeedle.style.transform = `translateX(-50%) rotate(0deg)`;
-      tunerDisplay.classList.remove('in-tune');
-    }
-  });
-
-  tuner.onPitchUpdate = (info) => {
-    if (!info) {
-      tunerNote.innerText = '--';
-      tunerCents.innerText = '0¢';
-      tunerNeedle.style.transform = `translateX(-50%) rotate(0deg)`;
-      tunerDisplay.classList.remove('in-tune');
-      return;
-    }
-
-    tunerNote.innerText = info.note;
-    tunerCents.innerText = `${info.cents > 0 ? '+' : ''}${info.cents}¢ (${info.freq}Hz)`;
-
-    const clampedCents = Math.max(-50, Math.min(50, info.cents));
-    const angle = (clampedCents / 50) * 45;
-    tunerNeedle.style.transform = `translateX(-50%) rotate(${angle}deg)`;
-
-    if (info.inTune) {
-      tunerDisplay.classList.add('in-tune');
-    } else {
-      tunerDisplay.classList.remove('in-tune');
-    }
-  };
+  // Pro Stage & Chromatic Tuner UI Manager
+  const stageTunerUI = new window.StageTunerUI(engine, tuner);
 
   // Oscilloscope / FFT Spectrum toggle
   scopeModeBtn.addEventListener('click', () => {

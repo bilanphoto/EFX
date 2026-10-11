@@ -5,10 +5,22 @@
 (function(window) {
   'use strict';
 
-  const DEFAULT_VERSION = 'V1.1.0';
+  const DEFAULT_VERSION = 'V1.1.1';
   const APP_NAME = 'VINTAGE RIG PRO GUITAR STUDIO';
 
   const CHANGELOG = [
+    {
+      version: 'V1.1.1',
+      date: '2026-10-11',
+      title: 'Live Input Signal Oscilloscope & Audio Interface Pro Routing',
+      items: [
+        'เพิ่มกราฟตรวจจับคลื่นสัญญาณเสียงเข้าสด (Live Input Oscilloscope) และ Segmented LED Level Meter แสดงค่า dB และสถานะตรวจจับสัญญาณเรียลไทม์',
+        'แก้ปัญหาต่อ Audio Interface แล้วไม่มีเสียงเข้า (ใน GarageBand ดังแต่เว็บบราวเซอร์เงียบ) ด้วยระบบ Hardware Channel Selector [CH 1], [CH 2 (Inst)], [1+2] รองรับช่องเสียบสายกีตาร์ Hi-Z ทุกยี่ห้อ (Scarlett, Behringer, iRig, ฯลฯ)',
+        'เพิ่มระบบเลือกและค้นหาอุปกรณ์การ์ดเสียง (Audio Interface Selector) พร้อมปุ่มรีเฟรชอุปกรณ์อัตโนมัติ',
+        'เพิ่มโหมด Direct Dry Audition ฟังเสียงกีตาร์สดตรงๆ ไม่ผ่านเอฟเฟค เพื่อทดสอบสายแจ็คและเกนสัญญาณ',
+        'เพิ่มสวิตช์เลือกต้นทางสัญญาณบนจอ CRT Signal Monitor (SRC: GUITAR IN / MASTER OUT) และปุ่มเร่งเกนสัญญาณอินพุต (+6dB / +12dB Boost)'
+      ]
+    },
     {
       version: 'V1.1.0',
       date: '2026-10-08',

@@ -28,7 +28,7 @@
           <div class="brand-text-col">
             <div class="brand-title-row">
               <span class="brand-title">VINTAGE RIG</span>
-              <span class="app-version-pill" id="header-version-pill">V1.1.0</span>
+              <span class="app-version-pill" id="header-version-pill">V1.1.1</span>
               <button class="brand-info-btn" id="app-info-btn" aria-label="App Information" title="ข้อมูลแอพ & เวอร์ชั่น (About App)">ℹ️</button>
             </div>
             <span class="brand-sub">PRO GUITAR STUDIO</span>
@@ -185,7 +185,10 @@
         <div class="crt-screen-frame">
           <div class="crt-header">
             <span class="crt-title">SIGNAL MONITOR</span>
-            <button class="crt-mode-btn" id="scope-mode-btn">OSCILLOSCOPE</button>
+            <div class="crt-controls">
+              <button class="crt-mode-btn crt-src-btn input-active" id="scope-source-btn" title="สลับแหล่งสัญญาณมอนิเตอร์: สัญญาณกีตาร์สดขาเข้า (GUITAR IN) / สัญญาณเสียงออกหลังเอฟเฟค (MASTER OUT)">SRC: GUITAR IN</button>
+              <button class="crt-mode-btn" id="scope-mode-btn" title="สลับโหมด: คลื่นเสียง Oscilloscope / ความถี่ FFT Spectrum">OSCILLOSCOPE</button>
+            </div>
           </div>
           <canvas id="visualizer-canvas" class="crt-canvas"></canvas>
           <div class="crt-scanline-overlay"></div>
@@ -221,7 +224,7 @@
             <h3 class="info-app-title">VINTAGE RIG PRO GUITAR STUDIO</h3>
             <div class="info-version-tag">
               <span class="version-label">VERSION</span>
-              <span class="version-number" id="info-version-display">V1.1.0</span>
+              <span class="version-number" id="info-version-display">V1.1.1</span>
               <span class="version-badge" id="info-status-badge">LATEST</span>
             </div>
           </div>
@@ -278,7 +281,7 @@
               <span class="update-icon">🔄</span>
               <div>
                 <div class="update-title">ระบบจัดการและตรวจสอบเวอร์ชั่น (Version Management)</div>
-                <div class="update-sub">เวอร์ชั่นปัจจุบัน: <strong id="info-current-ver-text">V1.1.0</strong></div>
+                <div class="update-sub">เวอร์ชั่นปัจจุบัน: <strong id="info-current-ver-text">V1.1.1</strong></div>
               </div>
             </div>
             <div class="update-actions">
@@ -286,13 +289,13 @@
                 <span class="btn-spinner" id="update-spinner"></span>
                 <span>ตรวจเช็คการอัปเดต</span>
               </button>
-              <button class="info-bump-btn" id="bump-version-btn" title="เพิ่มเวอร์ชั่นถัดไป (เช่น V1.1.0 -> V1.1.1)">
+              <button class="info-bump-btn" id="bump-version-btn" title="เพิ่มเวอร์ชั่นถัดไป (เช่น V1.1.1 -> V1.1.2)">
                 <span>+ เพิ่มเวอร์ชั่น (Bump)</span>
               </button>
             </div>
           </div>
           <div class="update-status-msg" id="update-status-msg">
-            ระบบทำงานบนเวอร์ชั่นล่าสุด V1.1.0 แล้ว
+            ระบบทำงานบนเวอร์ชั่นล่าสุด V1.1.1 แล้ว
           </div>
         </div>
 

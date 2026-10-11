@@ -901,6 +901,12 @@ body.studio-app {
   text-shadow: 0 0 5px #00ff66;
 }
 
+.crt-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
 .crt-mode-btn {
   background: #141a16;
   border: 1px solid #1f3b28;
@@ -910,6 +916,24 @@ body.studio-app {
   padding: 2px 6px;
   border-radius: 3px;
   cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.crt-mode-btn:hover {
+  background: #1c2620;
+}
+
+.crt-mode-btn.crt-src-btn {
+  color: #38bdf8;
+  border-color: #0c4a6e;
+  background: #081a24;
+}
+
+.crt-mode-btn.crt-src-btn.input-active {
+  color: #38bdf8;
+  border-color: #0284c7;
+  background: #072738;
+  box-shadow: 0 0 6px rgba(56, 189, 248, 0.4);
 }
 
 .crt-canvas {

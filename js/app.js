@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const tunerCents = document.getElementById('tuner-cents');
   const tunerToggleBtn = document.getElementById('tuner-toggle-btn');
   const scopeModeBtn = document.getElementById('scope-mode-btn');
+  const scopeSourceBtn = document.getElementById('scope-source-btn');
   const presetButtons = document.querySelectorAll('.snap-preset-btn');
 
   // Modal handler for Adding Pedals (all 12+ Boss Pedals)
@@ -259,6 +260,21 @@ document.addEventListener('DOMContentLoaded', async () => {
       scopeModeBtn.innerText = 'OSCILLOSCOPE';
     }
   });
+
+  // CRT Oscilloscope Source Toggle (Guitar Raw Input vs Master Output)
+  if (scopeSourceBtn) {
+    scopeSourceBtn.addEventListener('click', () => {
+      if (visualizer.source === 'input') {
+        visualizer.setSource('output');
+        scopeSourceBtn.innerText = 'SRC: MASTER OUT';
+        scopeSourceBtn.classList.remove('input-active');
+      } else {
+        visualizer.setSource('input');
+        scopeSourceBtn.innerText = 'SRC: GUITAR IN';
+        scopeSourceBtn.classList.add('input-active');
+      }
+    });
+  }
 
   // Bottom Studio Dock Toggle Switch (Open / Close)
   const bottomDock = document.getElementById('bottom-studio-dock');

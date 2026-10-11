@@ -18,35 +18,59 @@ class BaseAmp {
     this.ampOutput = this.ctx.createGain();
     this.dryNode = this.ctx.createGain();
 
-    this.inputNode.connect(this.ampInput);
-    this.ampOutput.connect(this.outputNode);
+    // Explicitly set initial gain values to eliminate parallel dry leak
+    this.ampInput.gain.value = 1.0;
+    this.dryNode.gain.value = 0.0;
+    const t = this.ctx.currentTime;
+    this.ampInput.gain.setValueAtTime(1.0, t);
+    this.dryNode.gain.setValueAtTime(0.0, t);
 
-    this.inputNode.connect(this.dryNode);
-    this.dryNode.connect(this.outputNode);
-
-    this.ampInput.gain.setValueAtTime(1.0, this.ctx.currentTime);
-    this.dryNode.gain.setValueAtTime(0.0, this.ctx.currentTime);
+    this.ensureInternalConnections();
 
     this.params = {};
     this.onParamChanged = null;
+  }
+
+  ensureInternalConnections() {
+    try {
+      this.inputNode.connect(this.ampInput);
+      this.inputNode.connect(this.dryNode);
+      this.ampOutput.connect(this.outputNode);
+      this.dryNode.connect(this.outputNode);
+    } catch (e) {}
   }
 
   setBypass(bypassed) {
     this.bypassed = bypassed;
     const t = this.ctx.currentTime;
     if (bypassed) {
-      this.ampInput.gain.setTargetAtTime(0.0, t, 0.02);
-      this.dryNode.gain.setTargetAtTime(1.0, t, 0.02);
+      this.ampInput.gain.cancelScheduledValues(t);
+      this.dryNode.gain.cancelScheduledValues(t);
+      this.ampInput.gain.setValueAtTime(0.0, t);
+      this.ampInput.gain.value = 0.0;
+      this.dryNode.gain.setValueAtTime(1.0, t);
+      this.dryNode.gain.value = 1.0;
     } else {
-      this.ampInput.gain.setTargetAtTime(1.0, t, 0.02);
-      this.dryNode.gain.setTargetAtTime(0.0, t, 0.02);
+      this.ampInput.gain.cancelScheduledValues(t);
+      this.dryNode.gain.cancelScheduledValues(t);
+      this.ampInput.gain.setValueAtTime(1.0, t);
+      this.ampInput.gain.value = 1.0;
+      this.dryNode.gain.setValueAtTime(0.0, t);
+      this.dryNode.gain.value = 0.0;
     }
     if (this.onParamChanged) this.onParamChanged('bypassed', bypassed);
   }
 
   disconnect() {
-    this.inputNode.disconnect();
-    this.outputNode.disconnect();
+    // Only disconnect outgoing external connections to preserve internal amp wiring
+    try {
+      this.outputNode.disconnect();
+    } catch (e) {}
+  }
+
+  dispose() {
+    this.disconnect();
+    try { this.inputNode.disconnect(); } catch (e) {}
   }
 
   updateParam(name, val) {
@@ -166,7 +190,7 @@ class FenderAcoustasonicAmp extends BaseAmp {
 
   applyParams() {
     const t = this.ctx.currentTime;
-    const vol = 0.5 + (this.params.vol2 / 100) * 1.8;
+    const vol = (this.params.vol2 / 100) * 2.0;
     this.preVolume.gain.setTargetAtTime(vol, t, 0.02);
 
     const b = -6.0 + (this.params.bass / 100) * 12.0;

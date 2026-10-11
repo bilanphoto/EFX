@@ -124,10 +124,13 @@ class AudioEngine {
     this.inputBoostGain = this.ctx.createGain();
     this.inputBoostGain.gain.setValueAtTime(4.0, this.ctx.currentTime);
 
-    // Direct Monitor Gain (Dry audio audition directly to Master destination)
+    // Direct Monitor Gain (Dry audio audition directly to Master destination - DISABLED by default)
+    this.isDirectMonitoring = false;
     this.directMonitorGain = this.ctx.createGain();
+    this.directMonitorGain.gain.value = 0.0;
     this.directMonitorGain.gain.setValueAtTime(0.0, this.ctx.currentTime);
-    this.directMonitorGain.connect(this.masterGain);
+    // CRITICAL: DO NOT connect directMonitorGain to masterGain here!
+    // Direct monitor should ONLY be connected if user explicitly toggles setDirectMonitor(true).
 
     // Route mixer to inputAnalyser, boostGain, and directMonitorGain
     this.inputChannelMixer.connect(this.inputAnalyser);
@@ -189,9 +192,22 @@ class AudioEngine {
 
   setDirectMonitor(enabled) {
     this.isDirectMonitoring = !!enabled;
-    if (this.directMonitorGain && this.ctx) {
-      const target = enabled ? 1.0 : 0.0;
-      this.directMonitorGain.gain.setTargetAtTime(target, this.ctx.currentTime, 0.02);
+    if (!this.directMonitorGain || !this.ctx) return;
+    try {
+      this.directMonitorGain.disconnect();
+    } catch (e) {}
+    const t = this.ctx.currentTime;
+    if (this.isDirectMonitoring) {
+      this.directMonitorGain.gain.cancelScheduledValues(t);
+      this.directMonitorGain.gain.setValueAtTime(1.0, t);
+      this.directMonitorGain.gain.value = 1.0;
+      this.directMonitorGain.connect(this.masterGain);
+      console.log('Direct Monitor Enabled (Raw dry signal routed to Master destination)');
+    } else {
+      this.directMonitorGain.gain.cancelScheduledValues(t);
+      this.directMonitorGain.gain.setValueAtTime(0.0, t);
+      this.directMonitorGain.gain.value = 0.0;
+      console.log('Direct Monitor Disabled (Full serial pedalboard & amp DSP active)');
     }
   }
 
@@ -200,12 +216,18 @@ class AudioEngine {
     if (!this.channel1Gain || !this.channel2Gain) return;
     const t = this.ctx ? this.ctx.currentTime : 0;
     if (mode === 'ch1') {
+      this.channel1Gain.gain.value = 1.0;
+      this.channel2Gain.gain.value = 0.0;
       this.channel1Gain.gain.setValueAtTime(1.0, t);
       this.channel2Gain.gain.setValueAtTime(0.0, t);
     } else if (mode === 'ch2') {
+      this.channel1Gain.gain.value = 0.0;
+      this.channel2Gain.gain.value = 1.0;
       this.channel1Gain.gain.setValueAtTime(0.0, t);
       this.channel2Gain.gain.setValueAtTime(1.0, t);
     } else { // 'both'
+      this.channel1Gain.gain.value = 1.0;
+      this.channel2Gain.gain.value = 1.0;
       this.channel1Gain.gain.setValueAtTime(1.0, t);
       this.channel2Gain.gain.setValueAtTime(1.0, t);
     }
@@ -280,20 +302,35 @@ class AudioEngine {
   rebuildGraph() {
     if (!this.ctx || !this.chainInputNode || !this.chainOutputNode) return;
 
-    // Disconnect everything in the chain
-    this.chainInputNode.disconnect();
-    this.chainOutputNode.disconnect();
+    // Disconnect external serial connections (ONLY output nodes!)
+    try { this.chainInputNode.disconnect(); } catch (e) {}
+    try { this.chainOutputNode.disconnect(); } catch (e) {}
 
     this.pedalChain.forEach(pedal => {
-      if (pedal.disconnect) pedal.disconnect();
+      if (pedal && pedal.outputNode) {
+        try { pedal.outputNode.disconnect(); } catch (e) {}
+      }
+      if (pedal && typeof pedal.ensureInternalConnections === 'function') {
+        pedal.ensureInternalConnections();
+      }
     });
 
-    if (this.currentAmp && this.currentAmp.disconnect) {
-      this.currentAmp.disconnect();
+    if (this.currentAmp) {
+      if (this.currentAmp.outputNode) {
+        try { this.currentAmp.outputNode.disconnect(); } catch (e) {}
+      }
+      if (typeof this.currentAmp.ensureInternalConnections === 'function') {
+        this.currentAmp.ensureInternalConnections();
+      }
     }
 
-    if (this.currentCab && this.currentCab.disconnect) {
-      this.currentCab.disconnect();
+    if (this.currentCab) {
+      if (this.currentCab.outputNode) {
+        try { this.currentCab.outputNode.disconnect(); } catch (e) {}
+      }
+      if (typeof this.currentCab.ensureInternalConnections === 'function') {
+        this.currentCab.ensureInternalConnections();
+      }
     }
 
     // Connect pedals in series

@@ -5,10 +5,22 @@
 (function(window) {
   'use strict';
 
-  const DEFAULT_VERSION = 'V1.1.3';
+  const DEFAULT_VERSION = 'V1.1.4';
   const APP_NAME = 'VINTAGE RIG PRO GUITAR STUDIO';
 
   const CHANGELOG = [
+    {
+      version: 'V1.1.4',
+      date: '2026-10-11',
+      title: 'Eliminate Parallel Dry Audio Leak & Restore Full Signal Chain Control',
+      items: [
+        'แก้ปัญหาวอลุมและปุ่มปรับทุกตัวไม่ทำงาน / เสียงไม่เปลี่ยนเมื่อเหยียบเอฟเฟค (Total Parallel Dry Leak Fix): แก้ไขข้อผิดพลาดของ Web Audio API ที่ GainNode บายพาสเสียงสด (directMonitorGain, dryNode) มีค่าเริ่มต้นเป็น 1.0 และเชื่อมตรงสู่ Master ข้ามแอมป์และเอฟเฟค ปัจจุบันตัดการเชื่อมต่อ directMonitor ทั้งหมดโดยค่าเริ่มต้น และตั้งค่า dryNode = 0.0 ในทุกก้อนและทุกแอมป์',
+        'แก้ไขระบบตัดต่อสายสัญญาณ (Audio Graph Rebuild Safety): แก้ไขข้อผิดพลาดที่คำสั่ง disconnect() ไปตัดสายภายในของก้อนเอฟเฟคและตู้แอมป์ (inputNode ภายใน) ทำให้สัญญาณในสายเอฟเฟคเงียบ และเหลือเพียงเสียงดิบ ตอนนี้ระบบใช้ safe disconnect เฉพาะ outgoing connections พร้อมฟังก์ชัน ensureInternalConnections() ทำให้ก้อนเอฟเฟคและแอมป์ได้รับสัญญาณเต็ม 100%',
+        'วอลุมมาสเตอร์และปุ่มปรับทุกตัวตอบสนองทันที: เมื่อปรับวอลุมมาสเตอร์ของแอมป์ลงสุดที่ 0 เสียงจะเงียบสนิท 100% ไม่มีเสียงกีตาร์คลีนเล็ดลอดออกมาอีกต่อไป และปุ่มปรับ Level, Gain, Tone, EQ บนก้อนและแอมป์ทุกตัวส่งผลต่อเสียงสดทันทีแบบเรียลไทม์',
+        'แก้ปัญหาเสียงวูบวาบเหมือนแกว่งไปมา (Phase Comb-Filtering Eradicated): เสียงวูบวาบเกิดจากเสียงดิบที่เล็ดลอดคู่ขนาน (Latency 0ms) ไปรวมกับเสียงที่ผ่านวงจรเอฟเฟค (Latency 5-15ms) จนเกิด Phase Cancellation และ Comb Filtering เมื่อตัดเสียงดิบที่รั่วไหลออกทั้งหมด เสียงกีตาร์จึงดัง นิ่ง ตรง และกังวานตามธรรมชาติ',
+        'ปรับจูน Fender Acoustasonic Amp ให้วอลุมลงสุดเงียบสนิท: ปรับสูตรความดังของ Channel 2 Vol จากเดิมที่ค้างอยู่ที่ 0.5 ให้สามารถปรับลดลงถึง 0.0 ได้อย่างสมบูรณ์'
+      ]
+    },
     {
       version: 'V1.1.3',
       date: '2026-10-11',

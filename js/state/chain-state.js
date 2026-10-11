@@ -584,8 +584,7 @@ class ChainState {
     const idx = this.pedals.findIndex(p => p.id === id);
     if (idx !== -1) {
       const [removed] = this.pedals.splice(idx, 1);
-      if (removed.dispose) removed.dispose();
-      else if (removed.disconnect) removed.disconnect();
+      if (removed.disconnect) removed.disconnect();
       this.engine.pedalChain = this.pedals;
       this.engine.rebuildGraph();
 
@@ -628,9 +627,8 @@ class ChainState {
   }
 
   setAmp(type) {
-    if (this.currentAmp) {
-      if (this.currentAmp.dispose) this.currentAmp.dispose();
-      else if (this.currentAmp.disconnect) this.currentAmp.disconnect();
+    if (this.currentAmp && this.currentAmp.disconnect) {
+      this.currentAmp.disconnect();
     }
     const amp = window.createAmpInstance(type, 'amp_' + type, this.engine);
     amp.onParamChanged = () => this.scheduleSave();

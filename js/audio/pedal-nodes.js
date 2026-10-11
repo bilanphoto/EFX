@@ -83,26 +83,17 @@ class BasePedal {
     this.effectOutputNode = this.ctx.createGain();
     this.dryNode = this.ctx.createGain();
 
-    // Explicitly set initial gain values to eliminate parallel dry leak
-    this.effectInputNode.gain.value = 1.0;
-    this.dryNode.gain.value = 0.0;
-    const t = this.ctx.currentTime;
-    this.effectInputNode.gain.setValueAtTime(1.0, t);
-    this.dryNode.gain.setValueAtTime(0.0, t);
+    this.inputNode.connect(this.effectInputNode);
+    this.effectOutputNode.connect(this.outputNode);
 
-    this.ensureInternalConnections();
+    this.inputNode.connect(this.dryNode);
+    this.dryNode.connect(this.outputNode);
+
+    this.effectInputNode.gain.setValueAtTime(1.0, this.ctx.currentTime);
+    this.dryNode.gain.setValueAtTime(0.0, this.ctx.currentTime);
 
     this.params = {};
     this.onParamChanged = null;
-  }
-
-  ensureInternalConnections() {
-    try {
-      this.inputNode.connect(this.effectInputNode);
-      this.inputNode.connect(this.dryNode);
-      this.effectOutputNode.connect(this.outputNode);
-      this.dryNode.connect(this.outputNode);
-    } catch (e) {}
   }
 
   toggleBypass() {
@@ -114,33 +105,18 @@ class BasePedal {
     this.bypassed = bypassed;
     const t = this.ctx.currentTime;
     if (bypassed) {
-      this.effectInputNode.gain.cancelScheduledValues(t);
-      this.dryNode.gain.cancelScheduledValues(t);
-      this.effectInputNode.gain.setValueAtTime(0.0, t);
-      this.effectInputNode.gain.value = 0.0;
-      this.dryNode.gain.setValueAtTime(1.0, t);
-      this.dryNode.gain.value = 1.0;
+      this.effectInputNode.gain.setTargetAtTime(0.0, t, 0.015);
+      this.dryNode.gain.setTargetAtTime(1.0, t, 0.015);
     } else {
-      this.effectInputNode.gain.cancelScheduledValues(t);
-      this.dryNode.gain.cancelScheduledValues(t);
-      this.effectInputNode.gain.setValueAtTime(1.0, t);
-      this.effectInputNode.gain.value = 1.0;
-      this.dryNode.gain.setValueAtTime(0.0, t);
-      this.dryNode.gain.value = 0.0;
+      this.effectInputNode.gain.setTargetAtTime(1.0, t, 0.015);
+      this.dryNode.gain.setTargetAtTime(0.0, t, 0.015);
     }
     if (this.onParamChanged) this.onParamChanged('bypassed', bypassed);
   }
 
   disconnect() {
-    // Only disconnect outgoing external connections to preserve internal pedal wiring
-    try {
-      this.outputNode.disconnect();
-    } catch (e) {}
-  }
-
-  dispose() {
-    this.disconnect();
-    try { this.inputNode.disconnect(); } catch (e) {}
+    this.inputNode.disconnect();
+    this.outputNode.disconnect();
   }
 
   updateParam(name, val) {
@@ -2057,9 +2033,9 @@ class MXRPhase90Pedal extends BasePedal {
     this.applyParams();
   }
 
-  dispose() {
+  disconnect() {
     try { this.lfo.stop(); } catch (e) {}
-    super.dispose();
+    super.disconnect();
   }
 }
 
@@ -2196,9 +2172,9 @@ class DunlopCryBabyPedal extends BasePedal {
     this.applyParams();
   }
 
-  dispose() {
+  disconnect() {
     try { this.autoLfo.stop(); } catch (e) {}
-    super.dispose();
+    super.disconnect();
   }
 }
 

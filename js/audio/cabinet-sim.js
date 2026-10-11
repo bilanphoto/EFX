@@ -46,42 +46,19 @@ class CabinetSim {
     this.inputNode.connect(this.dryGain);
     this.dryGain.connect(this.outputNode);
 
-    // Explicitly set initial gain values to eliminate parallel dry leak
-    this.convolverGain.gain.value = 1.2;
-    this.dryGain.gain.value = 0.0;
-    const t = this.ctx.currentTime;
-    this.convolverGain.gain.setValueAtTime(1.2, t);
-    this.dryGain.gain.setValueAtTime(0.0, t);
-
-    this.ensureInternalConnections();
-  }
-
-  ensureInternalConnections() {
-    try {
-      this.inputNode.connect(this.lowResFilter);
-      this.inputNode.connect(this.dryGain);
-      this.convolverGain.connect(this.outputNode);
-      this.dryGain.connect(this.outputNode);
-    } catch (e) {}
+    this.convolverGain.gain.setValueAtTime(1.0, this.ctx.currentTime);
+    this.dryGain.gain.setValueAtTime(0.0, this.ctx.currentTime);
   }
 
   setBypass(bypassed) {
     this.bypassed = bypassed;
     const t = this.ctx.currentTime;
     if (bypassed) {
-      this.convolverGain.gain.cancelScheduledValues(t);
-      this.dryGain.gain.cancelScheduledValues(t);
-      this.convolverGain.gain.setValueAtTime(0.0, t);
-      this.convolverGain.gain.value = 0.0;
-      this.dryGain.gain.setValueAtTime(1.0, t);
-      this.dryGain.gain.value = 1.0;
+      this.convolverGain.gain.setTargetAtTime(0.0, t, 0.02);
+      this.dryGain.gain.setTargetAtTime(1.0, t, 0.02);
     } else {
-      this.convolverGain.gain.cancelScheduledValues(t);
-      this.dryGain.gain.cancelScheduledValues(t);
-      this.convolverGain.gain.setValueAtTime(1.0, t);
-      this.convolverGain.gain.value = 1.0;
-      this.dryGain.gain.setValueAtTime(0.0, t);
-      this.dryGain.gain.value = 0.0;
+      this.convolverGain.gain.setTargetAtTime(1.0, t, 0.02);
+      this.dryGain.gain.setTargetAtTime(0.0, t, 0.02);
     }
   }
 
@@ -279,15 +256,8 @@ class CabinetSim {
   }
 
   disconnect() {
-    // Only disconnect outgoing external connections to preserve internal cab wiring
-    try {
-      this.outputNode.disconnect();
-    } catch (e) {}
-  }
-
-  dispose() {
-    this.disconnect();
-    try { this.inputNode.disconnect(); } catch (e) {}
+    this.inputNode.disconnect();
+    this.outputNode.disconnect();
   }
 }
 

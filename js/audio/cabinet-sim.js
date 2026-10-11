@@ -47,10 +47,10 @@ class CabinetSim {
     this.dryGain.connect(this.outputNode);
 
     // Explicitly set initial gain values to eliminate parallel dry leak
-    this.convolverGain.gain.value = 1.0;
+    this.convolverGain.gain.value = 1.2;
     this.dryGain.gain.value = 0.0;
     const t = this.ctx.currentTime;
-    this.convolverGain.gain.setValueAtTime(1.0, t);
+    this.convolverGain.gain.setValueAtTime(1.2, t);
     this.dryGain.gain.setValueAtTime(0.0, t);
 
     this.ensureInternalConnections();

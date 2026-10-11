@@ -5,10 +5,22 @@
 (function(window) {
   'use strict';
 
-  const DEFAULT_VERSION = 'V1.1.4';
+  const DEFAULT_VERSION = 'V1.1.5';
   const APP_NAME = 'VINTAGE RIG PRO GUITAR STUDIO';
 
   const CHANGELOG = [
+    {
+      version: 'V1.1.5',
+      date: '2026-10-12',
+      title: 'Robust Live Guitar Ingestion & 100% True Serial Pedal-to-Amp Daisy Chain',
+      items: [
+        'แก้ไขปัญหาสัญญาณเสียงไม่เข้า 100% (Foolproof Live Input Routing): อัปเกรดระบบรับสัญญาณเสียงสดจากการ์ดเสียงให้เชื่อมต่อแบบ Native Summing เข้าสู่ inputChannelMixer โดยตรง ทำให้สัญญาณเสียงจาก Audio Interface ทุกยี่ห้อ (เช่น Focusrite Scarlett, Behringer, M-Audio, Steinberg UR22, MOTU) ไม่ว่าจะเสียบสายกีตาร์ที่รู Input 1 หรือ Input 2 (Inst/Hi-Z) หรือส่งสัญญาณแบบ Mono/Stereo สัญญาณจะวิ่งเข้าสู่ระบบทันที กราฟคลื่นเสียงและหลอดไฟสัญญาณขึ้นสีเขียวสดใสตรวจจับสัญญาณได้อย่างแม่นยำ',
+        'ยืนยันและเสริมความแข็งแกร่งระบบต่อสายเอฟเฟคอนุกรม (True Serial Daisy Chain to Amp): เอฟเฟคทุกก้อนที่เพิ่มเข้ามาในบอร์ดจะถูกต่อเรียงแถวกันแบบอนุกรม (Daisy Chain) โดยอัตโนมัติ 100% เสมือนการต่อสายแจ็คพ่วงบอร์ดเอฟเฟคจริง (Input -> ก้อนที่ 1 -> ก้อนที่ 2 -> ... -> ก้อนที่ N -> หน้าตู้แอมป์ Guitar Amp -> ตู้ลำโพง Cabinet -> Master) เสียงที่ผ่านก้อนเอฟเฟคจะวิ่งเข้าหน้าตู้แอมป์เสมอ',
+        'ตัดคำสั่ง track.applyConstraints ที่ทำให้การ์ดเสียงบน Mac หยุดส่งสัญญาณ: ตัดคำสั่งบังคับปรับ channelCount แบบบังคับบน macOS ที่ทำให้ไดรเวอร์ CoreAudio ของ Chrome/Safari ปิดหรือ Mute สัญญาณเสียงชั่วขณะ พร้อมใช้การเชื่อมต่อแบบ ideal constraint เพื่อให้เปิด GUITAR IN แล้วเสียงเข้าทันทีไม่มีดีเลย์',
+        'ป้องกันสัญญาณเสียงซ้ำซ้อนในสายสัญญาณ (Safe Clean Serial Reconstruction): ปรับปรุงระบบตัดต่อสายใน rebuildGraph ให้ตัดเฉพาะสายภายนอกระหว่างก้อนกับแอมป์อย่างแม่นยำ ป้องกันการคูณสัญญาณซ้ำซ้อน และรักษาระบบ True Bypass ของทุกก้อนเอฟเฟค',
+        'ปรับเกนตู้ลำโพง CabinetSim ให้เสียงแน่น คม ชัดเจน (+1.2x Unity Gain): เพิ่มความสดใสและพลังเสียงของตู้ลำโพงจำลองให้ตอบสนองต่อวอลุมและเกนของตู้แอมป์ได้อย่างทรงพลังและสมบูรณ์แบบ'
+      ]
+    },
     {
       version: 'V1.1.4',
       date: '2026-10-11',

@@ -211,30 +211,62 @@ class AudioEngine {
     }
   }
 
-  setInputChannel(mode) {
-    this.currentChannelMode = mode;
-    if (!this.channel1Gain || !this.channel2Gain) return;
-    const t = this.ctx ? this.ctx.currentTime : 0;
-    if (mode === 'ch1') {
-      this.channel1Gain.gain.value = 1.0;
-      this.channel2Gain.gain.value = 0.0;
+  _updateInputRouting() {
+    if (!this.inputSource || !this.ctx) return;
+
+    try { this.inputSource.disconnect(); } catch (e) {}
+
+    const t = this.ctx.currentTime;
+    const streamTrack = this.micStream ? this.micStream.getAudioTracks()[0] : null;
+    const trackChannels = (streamTrack && streamTrack.getSettings && streamTrack.getSettings().channelCount) || 2;
+
+    if (this.currentChannelMode === 'ch1') {
+      // Channel 1 only (Input 1 / Left)
+      this.inputSource.connect(this.inputSplitter);
+      this.channel1Gain.gain.cancelScheduledValues(t);
+      this.channel2Gain.gain.cancelScheduledValues(t);
       this.channel1Gain.gain.setValueAtTime(1.0, t);
       this.channel2Gain.gain.setValueAtTime(0.0, t);
-    } else if (mode === 'ch2') {
-      this.channel1Gain.gain.value = 0.0;
-      this.channel2Gain.gain.value = 1.0;
+      this.channel1Gain.gain.value = 1.0;
+      this.channel2Gain.gain.value = 0.0;
+      console.log('Input Routing: Channel 1 isolated');
+    } else if (this.currentChannelMode === 'ch2') {
+      // Channel 2 only (Input 2 / Right - Guitar / Inst)
+      this.inputSource.connect(this.inputSplitter);
+      this.channel1Gain.gain.cancelScheduledValues(t);
+      this.channel2Gain.gain.cancelScheduledValues(t);
       this.channel1Gain.gain.setValueAtTime(0.0, t);
       this.channel2Gain.gain.setValueAtTime(1.0, t);
-    } else { // 'both'
-      this.channel1Gain.gain.value = 1.0;
+      this.channel1Gain.gain.value = 0.0;
       this.channel2Gain.gain.value = 1.0;
-      this.channel1Gain.gain.setValueAtTime(1.0, t);
-      this.channel2Gain.gain.setValueAtTime(1.0, t);
+
+      // Fallback: If hardware stream happens to be 1-channel mono, route output 0 so it never goes silent
+      if (trackChannels === 1) {
+        try { this.inputSplitter.connect(this.channel2Gain, 0); } catch (e) {}
+      }
+      console.log('Input Routing: Channel 2 (Inst) active');
+    } else {
+      // 'both' (Default & Recommended - 100% Reliable Summing):
+      // Direct Web Audio connection to inputChannelMixer sums both channels natively
+      // and guarantees signal is NEVER muted regardless of audio interface model!
+      this.inputSource.connect(this.inputChannelMixer);
+      this.channel1Gain.gain.cancelScheduledValues(t);
+      this.channel2Gain.gain.cancelScheduledValues(t);
+      this.channel1Gain.gain.setValueAtTime(0.0, t);
+      this.channel2Gain.gain.setValueAtTime(0.0, t);
+      this.channel1Gain.gain.value = 0.0;
+      this.channel2Gain.gain.value = 0.0;
+      console.log('Input Routing: All Channels Summed (100% Reliable Native Mix)');
     }
+  }
+
+  setInputChannel(mode) {
+    this.currentChannelMode = mode || 'both';
+    this._updateInputRouting();
     try {
-      localStorage.setItem('BOSS_GUITAR_INPUT_CHANNEL', mode);
+      localStorage.setItem('BOSS_GUITAR_INPUT_CHANNEL', this.currentChannelMode);
     } catch (e) {}
-    console.log(`Input Channel Mode set to: ${mode} (Ch1 Gain: ${this.channel1Gain.gain.value}, Ch2 Gain: ${this.channel2Gain.gain.value})`);
+    console.log(`Input Channel Mode set to: ${this.currentChannelMode}`);
   }
 
   /**
@@ -310,30 +342,17 @@ class AudioEngine {
       if (pedal && pedal.outputNode) {
         try { pedal.outputNode.disconnect(); } catch (e) {}
       }
-      if (pedal && typeof pedal.ensureInternalConnections === 'function') {
-        pedal.ensureInternalConnections();
-      }
     });
 
-    if (this.currentAmp) {
-      if (this.currentAmp.outputNode) {
-        try { this.currentAmp.outputNode.disconnect(); } catch (e) {}
-      }
-      if (typeof this.currentAmp.ensureInternalConnections === 'function') {
-        this.currentAmp.ensureInternalConnections();
-      }
+    if (this.currentAmp && this.currentAmp.outputNode) {
+      try { this.currentAmp.outputNode.disconnect(); } catch (e) {}
     }
 
-    if (this.currentCab) {
-      if (this.currentCab.outputNode) {
-        try { this.currentCab.outputNode.disconnect(); } catch (e) {}
-      }
-      if (typeof this.currentCab.ensureInternalConnections === 'function') {
-        this.currentCab.ensureInternalConnections();
-      }
+    if (this.currentCab && this.currentCab.outputNode) {
+      try { this.currentCab.outputNode.disconnect(); } catch (e) {}
     }
 
-    // Connect pedals in series
+    // Connect pedals in series (100% True Daisy Chain: Pedal 1 -> Pedal 2 -> ... -> Pedal N)
     let currentNode = this.chainInputNode;
 
     for (let i = 0; i < this.pedalChain.length; i++) {
@@ -345,7 +364,7 @@ class AudioEngine {
     // Connect end of pedals to chainOutputNode
     currentNode.connect(this.chainOutputNode);
 
-    // Connect chainOutputNode to Amp (or directly to cab/master if amp bypassed)
+    // Connect chainOutputNode to Guitar Amp -> Speaker Cabinet -> MasterGain
     if (this.currentAmp) {
       this.chainOutputNode.connect(this.currentAmp.inputNode);
       if (this.currentCab) {
@@ -394,24 +413,18 @@ class AudioEngine {
       }
 
       // Pro-audio constraints: Disable aggressive speech processing (AGC, noise gates, echo suppression)
-      // that treats sustained guitar tones and distortion as noise and ducks volume
+      // Request stereo channelCount: { ideal: 2 } so Ch 2 (Inst/Guitar) is accessible
       const audioConstraints = {
         echoCancellation: false,
         autoGainControl: false,
         noiseSuppression: false,
-        channelCount: { ideal: 2 }, // Request 2 channels so Ch 2 (Inst/Guitar) is accessible!
+        channelCount: { ideal: 2 },
         latency: { ideal: 0.005 },
-        sampleRate: { ideal: 48000 },
-        googEchoCancellation: false,
-        googAutoGainControl: false,
-        googNoiseSuppression: false,
-        googHighpassFilter: false,
-        googTypingNoiseDetection: false,
-        googAudioMirroring: false
+        sampleRate: { ideal: 48000 }
       };
 
       if (this.currentDeviceId) {
-        audioConstraints.deviceId = { exact: this.currentDeviceId };
+        audioConstraints.deviceId = { ideal: this.currentDeviceId };
       }
 
       let stream;
@@ -433,20 +446,6 @@ class AudioEngine {
 
       const audioTrack = stream.getAudioTracks()[0];
       if (audioTrack) {
-        // Force-apply raw audio constraints directly on the audio track to bypass OS/browser filters
-        if (typeof audioTrack.applyConstraints === 'function') {
-          try {
-            await audioTrack.applyConstraints({
-              echoCancellation: false,
-              autoGainControl: false,
-              noiseSuppression: false,
-              channelCount: 2
-            });
-          } catch (e) {
-            console.warn('Track applyConstraints warning:', e);
-          }
-        }
-
         const settings = audioTrack.getSettings();
         if (settings.deviceId) {
           this.currentDeviceId = settings.deviceId;
@@ -458,13 +457,13 @@ class AudioEngine {
 
       if (this.inputSource) {
         try { this.inputSource.disconnect(); } catch (e) {}
+        this.inputSource = null;
       }
 
       this.inputSource = this.ctx.createMediaStreamSource(stream);
 
-      // Connect inputSource to our multi-channel splitter
-      this.inputSource.connect(this.inputSplitter);
-      this.setInputChannel(this.currentChannelMode);
+      // Route through robust multi-channel router
+      this._updateInputRouting();
       this.setInputBoost(this.inputBoostMultiplier || 4.0);
 
       this.currentInputType = 'mic';

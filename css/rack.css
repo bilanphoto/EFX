@@ -471,6 +471,34 @@
   color: #fef08a;
 }
 
+/* macOS Voice Isolation Diagnostic Hint Banner */
+.input-mac-hint-banner {
+  background: #1c1917;
+  border: 1px solid #ea580c;
+  color: #fed7aa;
+  font-size: 9px;
+  line-height: 1.4;
+  padding: 5px 8px;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(234, 88, 12, 0.15);
+  animation: fadeInHint 0.3s ease-out;
+}
+
+.input-mac-hint-banner strong {
+  color: #fdba74;
+}
+
+.input-mac-hint-banner em {
+  color: #fb923c;
+  font-style: normal;
+  font-weight: 600;
+}
+
+.input-mac-hint-banner .hint-close-btn:hover {
+  opacity: 1 !important;
+  color: #fff;
+}
+
 @keyframes fadeInHint {
   from { opacity: 0; transform: translateY(-3px); }
   to { opacity: 1; transform: translateY(0); }

@@ -56,13 +56,29 @@ class AudioEngine {
       this.ctx = new AudioContextClass();
     }
 
-    // Master Limiter (prevent ear damage and speaker distortion)
+    // Master Transparent Compressor (musical dynamics control, zero flutter/pumping)
     this.masterLimiter = this.ctx.createDynamicsCompressor();
-    this.masterLimiter.threshold.setValueAtTime(-1.0, this.ctx.currentTime);
-    this.masterLimiter.knee.setValueAtTime(0.0, this.ctx.currentTime);
-    this.masterLimiter.ratio.setValueAtTime(20.0, this.ctx.currentTime);
-    this.masterLimiter.attack.setValueAtTime(0.001, this.ctx.currentTime);
-    this.masterLimiter.release.setValueAtTime(0.05, this.ctx.currentTime);
+    this.masterLimiter.threshold.setValueAtTime(-2.0, this.ctx.currentTime);
+    this.masterLimiter.knee.setValueAtTime(12.0, this.ctx.currentTime); // Soft knee prevents abrupt jumps
+    this.masterLimiter.ratio.setValueAtTime(3.5, this.ctx.currentTime); // Musical mastering ratio
+    this.masterLimiter.attack.setValueAtTime(0.008, this.ctx.currentTime); // 8ms transparent attack
+    this.masterLimiter.release.setValueAtTime(0.25, this.ctx.currentTime); // 250ms smooth musical decay
+
+    // Master Soft Ceiling Waveshaper: Prevents harsh digital clipping above 0dBFS without gain pumping
+    this.masterCeiling = this.ctx.createWaveShaper();
+    const ceilingCurve = new Float32Array(2048);
+    for (let i = 0; i < 2048; i++) {
+      const x = (i * 2) / 2048 - 1;
+      if (x > 0.92) {
+        ceilingCurve[i] = 0.92 + 0.08 * Math.tanh((x - 0.92) / 0.08);
+      } else if (x < -0.92) {
+        ceilingCurve[i] = -0.92 - 0.08 * Math.tanh((-x - 0.92) / 0.08);
+      } else {
+        ceilingCurve[i] = x;
+      }
+    }
+    this.masterCeiling.curve = ceilingCurve;
+    this.masterCeiling.oversample = '2x';
 
     // Master Gain
     this.masterGain = this.ctx.createGain();
@@ -103,9 +119,10 @@ class AudioEngine {
     this.channel1Gain.connect(this.inputChannelMixer);
     this.channel2Gain.connect(this.inputChannelMixer);
 
-    // Input Boost Gain (+0dB to +24dB for quiet guitar pickups)
+    // Input Boost Gain (+0dB to +24dB for quiet guitar pickups; default 4.0x = +12dB standard Hi-Z)
+    this.inputBoostMultiplier = 4.0;
     this.inputBoostGain = this.ctx.createGain();
-    this.inputBoostGain.gain.setValueAtTime(1.0, this.ctx.currentTime);
+    this.inputBoostGain.gain.setValueAtTime(4.0, this.ctx.currentTime);
 
     // Direct Monitor Gain (Dry audio audition directly to Master destination)
     this.directMonitorGain = this.ctx.createGain();
@@ -125,9 +142,10 @@ class AudioEngine {
     } catch (e) {}
     this.setInputChannel(this.currentChannelMode);
 
-    // Connect Limiter -> Master Gain -> Analyser -> Destination
+    // Connect MasterGain -> MasterLimiter -> MasterCeiling -> Analyser -> Destination
     this.masterGain.connect(this.masterLimiter);
-    this.masterLimiter.connect(this.analyser);
+    this.masterLimiter.connect(this.masterCeiling);
+    this.masterCeiling.connect(this.analyser);
     this.analyser.connect(this.ctx.destination);
 
     this.isInitialized = true;
@@ -224,7 +242,7 @@ class AudioEngine {
       rms,
       peak,
       db: Math.max(-80, Math.min(6, Math.round(db * 10) / 10)),
-      hasSignal: peak > 0.012 || rms > 0.006, // Approx > -48 dB
+      hasSignal: peak > 0.008 || rms > 0.004, // Sensitive down to -52 dB for long guitar sustain
       isClipping: peak >= 0.98
     };
   }
@@ -338,12 +356,21 @@ class AudioEngine {
         } catch (e) {}
       }
 
-      // Pro-audio constraints: Disable aggressive speech processing that mutes guitar tones
+      // Pro-audio constraints: Disable aggressive speech processing (AGC, noise gates, echo suppression)
+      // that treats sustained guitar tones and distortion as noise and ducks volume
       const audioConstraints = {
         echoCancellation: false,
         autoGainControl: false,
         noiseSuppression: false,
-        channelCount: { ideal: 2 } // Request 2 channels so Ch 2 (Inst/Guitar) is accessible!
+        channelCount: { ideal: 2 }, // Request 2 channels so Ch 2 (Inst/Guitar) is accessible!
+        latency: { ideal: 0.005 },
+        sampleRate: { ideal: 48000 },
+        googEchoCancellation: false,
+        googAutoGainControl: false,
+        googNoiseSuppression: false,
+        googHighpassFilter: false,
+        googTypingNoiseDetection: false,
+        googAudioMirroring: false
       };
 
       if (this.currentDeviceId) {
@@ -369,6 +396,20 @@ class AudioEngine {
 
       const audioTrack = stream.getAudioTracks()[0];
       if (audioTrack) {
+        // Force-apply raw audio constraints directly on the audio track to bypass OS/browser filters
+        if (typeof audioTrack.applyConstraints === 'function') {
+          try {
+            await audioTrack.applyConstraints({
+              echoCancellation: false,
+              autoGainControl: false,
+              noiseSuppression: false,
+              channelCount: 2
+            });
+          } catch (e) {
+            console.warn('Track applyConstraints warning:', e);
+          }
+        }
+
         const settings = audioTrack.getSettings();
         if (settings.deviceId) {
           this.currentDeviceId = settings.deviceId;
@@ -387,6 +428,7 @@ class AudioEngine {
       // Connect inputSource to our multi-channel splitter
       this.inputSource.connect(this.inputSplitter);
       this.setInputChannel(this.currentChannelMode);
+      this.setInputBoost(this.inputBoostMultiplier || 4.0);
 
       this.currentInputType = 'mic';
       console.log(`Live Audio Input Active. Device: "${audioTrack?.label || 'Default'}", Channels: ${audioTrack?.getSettings()?.channelCount || 2}, Mode: ${this.currentChannelMode}`);

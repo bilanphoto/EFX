@@ -114,13 +114,13 @@ class GuitarPlayerUI {
                 <span class="signal-db" id="signal-db">-- dB</span>
               </div>
 
-              <!-- Input Boost Selector -->
-              <div class="input-boost-wrap" title="เร่งความแรงสัญญาณกีตาร์กรณีปิ๊กอัพเบา (+Input Gain Boost)">
-                <span class="boost-label">BOOST:</span>
+              <!-- Input Preamp / Boost Selector -->
+              <div class="input-boost-wrap" title="เร่งความแรงสัญญาณกีตาร์เข้าเอฟเฟค (+Input Preamp Boost)">
+                <span class="boost-label">PREAMP:</span>
                 <div class="boost-buttons">
-                  <button class="boost-btn active" data-boost="1.0" title="เกนปกติ (0 dB)">0dB</button>
-                  <button class="boost-btn" data-boost="2.0" title="เพิ่มเกน 2 เท่า (+6 dB)">+6dB</button>
-                  <button class="boost-btn" data-boost="4.0" title="เพิ่มเกน 4 เท่า (+12 dB)">+12dB</button>
+                  <button class="boost-btn" data-boost="1.0" title="เกนปกติ 0 dB (สำหรับปิ๊กอัพ Active / Line Level)">0dB</button>
+                  <button class="boost-btn active" data-boost="4.0" title="พรีแอมป์ +12 dB (มาตรฐานสำหรับกีตาร์ไฟฟ้าทั่วไป Hi-Z Input)">+12dB</button>
+                  <button class="boost-btn" data-boost="8.0" title="พรีแอมป์ +18 dB (สำหรับปิ๊กอัพเบาพิเศษ / รูไมค์ PC)">+18dB</button>
                 </div>
               </div>
             </div>
@@ -128,6 +128,11 @@ class GuitarPlayerUI {
             <!-- Diagnostic Hint Banner (Appears if input is active but silent) -->
             <div class="input-hint-banner" id="input-hint-banner" style="display: none;">
               💡 <strong>ยังไม่มีสัญญาณเข้า?</strong> หากใช้ Audio Interface (เช่น Focusrite, Behringer, iRig) ให้ลองคลิกปุ่ม <strong>[CH 2 (Inst)]</strong> หรือเลือกอุปกรณ์ในช่องการ์ดเสียง
+            </div>
+
+            <!-- macOS Voice Isolation Guidance Banner -->
+            <div class="input-mac-hint-banner" id="input-mac-hint-banner" style="display: none;">
+              🍎 <strong>สำหรับผู้ใช้ macOS:</strong> หากหางเสียงกีตาร์วูบวาบหรือสั่น ให้คลิก <strong>ไอคอนไมค์สีส้ม</strong> บนแถบเมนูบาร์ด้านบนขวาของ Mac แล้วเปลี่ยนจาก <em>"Voice Isolation (แยกเสียงพูด)"</em> เป็น <em>"Standard (มาตรฐาน)"</em> เพื่อให้หางเสียงยาวเป็นธรรมชาติ <span class="hint-close-btn" style="cursor:pointer; float:right; opacity:0.8;" title="ปิดคำแนะนำ">✕</span>
             </div>
           </div>
         </div>
@@ -278,6 +283,18 @@ class GuitarPlayerUI {
     const dmBtn = this.container.querySelector('#direct-monitor-btn');
     const boostButtons = this.container.querySelectorAll('.boost-btn');
 
+    const macHint = this.container.querySelector('#input-mac-hint-banner');
+    const isMac = /Mac|iPhone|iPad|iPod/i.test(navigator.platform) || /Macintosh/i.test(navigator.userAgent);
+    if (macHint) {
+      const closeBtn = macHint.querySelector('.hint-close-btn');
+      if (closeBtn) {
+        closeBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          macHint.style.display = 'none';
+        });
+      }
+    }
+
     micBtn.addEventListener('click', async () => {
       if (!this.isMicActive) {
         const selectedDev = deviceSelect.value || null;
@@ -287,6 +304,9 @@ class GuitarPlayerUI {
           micBtn.classList.add('active');
           micText.innerText = 'LIVE ON';
           await this._populateDeviceList();
+          if (macHint && isMac) {
+            macHint.style.display = 'block';
+          }
         } else {
           alert('ไม่สามารถเข้าถึงสัญญาณเสียง/ไมโครโฟนได้: ' + res.error + '\n\nคำแนะนำ: กรุณาตรวจสอบสิทธิ์การใช้งาน Microphone ในเบราว์เซอร์');
         }
@@ -295,6 +315,9 @@ class GuitarPlayerUI {
         this.isMicActive = false;
         micBtn.classList.remove('active');
         micText.innerText = 'GUITAR IN';
+        if (macHint) {
+          macHint.style.display = 'none';
+        }
       }
     });
 

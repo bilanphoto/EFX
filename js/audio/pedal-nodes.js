@@ -159,8 +159,8 @@ class SD1OverdrivePedal extends BasePedal {
 
   applyParams() {
     const t = this.ctx.currentTime;
-    const driveAmount = 1 + (this.params.drive / 100) * 34;
-    this.driveGain.gain.setTargetAtTime(driveAmount * 0.8, t, 0.02);
+    const driveAmount = 2.0 + (this.params.drive / 100) * 85;
+    this.driveGain.gain.setTargetAtTime(driveAmount * 0.85, t, 0.02);
     this.shaper.curve = makeDistortionCurve('asymmetric', this.params.drive);
 
     const cutoff = 1200 + (this.params.tone / 100) * 5500;
@@ -194,7 +194,8 @@ class DS1DistortionPedal extends BasePedal {
     this.levelGain = this.ctx.createGain();
 
     this.preHighpass.type = 'highpass';
-    this.preHighpass.frequency.setValueAtTime(650, this.ctx.currentTime);
+    this.preHighpass.frequency.setValueAtTime(75, this.ctx.currentTime);
+    this.preHighpass.Q.setValueAtTime(0.7, this.ctx.currentTime);
     this.shaper.oversample = '4x';
 
     this.toneFilterLow.type = 'lowpass';
@@ -225,7 +226,7 @@ class DS1DistortionPedal extends BasePedal {
 
   applyParams() {
     const t = this.ctx.currentTime;
-    const distMult = 1 + (this.params.dist / 100) * 55;
+    const distMult = 3.0 + (this.params.dist / 100) * 110;
     this.distGain.gain.setTargetAtTime(distMult, t, 0.02);
     this.shaper.curve = makeDistortionCurve('hard', this.params.dist);
 
@@ -261,7 +262,8 @@ class OS2OverdriveDistortionPedal extends BasePedal {
     this.levelGain = this.ctx.createGain();
 
     this.preFilter.type = 'highpass';
-    this.preFilter.frequency.setValueAtTime(400, this.ctx.currentTime);
+    this.preFilter.frequency.setValueAtTime(75, this.ctx.currentTime);
+    this.preFilter.Q.setValueAtTime(0.7, this.ctx.currentTime);
 
     this.shaperOD.oversample = '4x';
     this.shaperDist.oversample = '4x';
@@ -290,7 +292,7 @@ class OS2OverdriveDistortionPedal extends BasePedal {
 
   applyParams() {
     const t = this.ctx.currentTime;
-    const drv = 1 + (this.params.drive / 100) * 45;
+    const drv = 2.5 + (this.params.drive / 100) * 95;
     this.driveGain.gain.setTargetAtTime(drv, t, 0.02);
 
     this.shaperOD.curve = makeDistortionCurve('asymmetric', this.params.drive);
@@ -330,7 +332,8 @@ class DS2TurboDistortionPedal extends BasePedal {
     this.levelGain = this.ctx.createGain();
 
     this.preFilter.type = 'highpass';
-    this.preFilter.frequency.setValueAtTime(500, this.ctx.currentTime);
+    this.preFilter.frequency.setValueAtTime(75, this.ctx.currentTime);
+    this.preFilter.Q.setValueAtTime(0.7, this.ctx.currentTime);
 
     this.turboMidBoost.type = 'peaking';
     this.turboMidBoost.frequency.setValueAtTime(1100, this.ctx.currentTime);
@@ -356,7 +359,7 @@ class DS2TurboDistortionPedal extends BasePedal {
     const isTurboII = this.params.turbo === 'turbo_ii' || this.params.turbo === 1 || this.params.turbo === true;
 
     this.turboMidBoost.gain.setTargetAtTime(isTurboII ? 8.0 : 0.0, t, 0.02);
-    const gainMult = 1 + (this.params.dist / 100) * (isTurboII ? 60 : 45);
+    const gainMult = 3.0 + (this.params.dist / 100) * (isTurboII ? 130 : 90);
     this.distGain.gain.setTargetAtTime(gainMult, t, 0.02);
 
     this.shaper.curve = makeDistortionCurve(isTurboII ? 'turbo' : 'hard', this.params.dist);
@@ -415,9 +418,9 @@ class BD2BluesDriverPedal extends BasePedal {
 
   applyParams() {
     const t = this.ctx.currentTime;
-    const g = 1 + (this.params.gain / 100) * 25;
-    this.gainStage1.gain.setTargetAtTime(Math.sqrt(g), t, 0.02);
-    this.gainStage2.gain.setTargetAtTime(Math.sqrt(g) * 0.9, t, 0.02);
+    const g = 2.5 + (this.params.gain / 100) * 75;
+    this.gainStage1.gain.setTargetAtTime(Math.sqrt(g) * 1.25, t, 0.02);
+    this.gainStage2.gain.setTargetAtTime(Math.sqrt(g) * 1.10, t, 0.02);
 
     this.shaper1.curve = makeDistortionCurve('fet', this.params.gain * 0.6);
     this.shaper2.curve = makeDistortionCurve('fet', this.params.gain);
@@ -426,7 +429,6 @@ class BD2BluesDriverPedal extends BasePedal {
     this.toneFilter.gain.setTargetAtTime(toneGain, t, 0.02);
 
     const lvl = (this.params.level / 100) * 1.5;
-    this.levelGain.gain.setTargetAtTime(lvl, t, 0.02);
   }
 
   updateParam(name, val) {
@@ -742,6 +744,8 @@ class CS3CompressorPedal extends BasePedal {
     super(id, 'cs3', 'Boss CS-3 Compression Sustainer', engine);
 
     this.compressor = this.ctx.createDynamicsCompressor();
+    this.compressor.knee.setValueAtTime(10.0, this.ctx.currentTime);
+    this.compressor.release.setValueAtTime(0.22, this.ctx.currentTime);
     this.toneFilter = this.ctx.createBiquadFilter();
     this.levelGain = this.ctx.createGain();
 
@@ -845,8 +849,10 @@ class NS2NoiseGatePedal extends BasePedal {
     this.effectInputNode.connect(this.gateGain);
     this.gateGain.connect(this.effectOutputNode);
 
-    this.params = { threshold: 45, decay: 40, mode: 'reduction' };
+    this.params = { threshold: 35, decay: 45, mode: 'reduction' };
     this.reduction = 0;
+    this._gateOpen = true;
+    this._lastAboveTime = 0;
 
     this._runGateLoop();
   }
@@ -859,15 +865,30 @@ class NS2NoiseGatePedal extends BasePedal {
         sum += this.data[i] * this.data[i];
       }
       const rms = Math.sqrt(sum / this.data.length);
-      const thresh = (this.params.threshold / 100) * 0.06;
 
+      // Calibrated musical threshold curve (0.0015 to 0.028 RMS)
+      const normThresh = this.params.threshold / 100;
+      const closeThresh = 0.0015 + normThresh * normThresh * 0.025;
+      const openThresh = closeThresh * 1.5; // +3.5 dB hysteresis to prevent chattering
+
+      const now = performance.now();
       const t = this.ctx.currentTime;
-      if (rms < thresh) {
-        this.gateGain.gain.setTargetAtTime(0.001, t, 0.03 + (this.params.decay / 100) * 0.1);
-        this.reduction = 1;
-      } else {
-        this.gateGain.gain.setTargetAtTime(1.0, t, 0.005);
+
+      if (rms >= openThresh) {
+        this._lastAboveTime = now;
+        this._gateOpen = true;
+      } else if (rms < closeThresh && (now - this._lastAboveTime > 120)) {
+        // Hold gate open for 120ms before beginning to close
+        this._gateOpen = false;
+      }
+
+      if (this._gateOpen) {
+        this.gateGain.gain.setTargetAtTime(1.0, t, 0.008);
         this.reduction = 0;
+      } else {
+        const releaseTime = 0.06 + (this.params.decay / 100) * 0.18;
+        this.gateGain.gain.setTargetAtTime(0.001, t, releaseTime);
+        this.reduction = 1;
       }
     } else {
       this.gateGain.gain.setValueAtTime(1.0, this.ctx.currentTime);
@@ -1061,7 +1082,7 @@ class MT2MetalZonePedal extends BasePedal {
 
   applyParams() {
     const t = this.ctx.currentTime;
-    const g = 1.0 + (this.params.dist / 100) * 35.0;
+    const g = 4.0 + (this.params.dist / 100) * 125.0;
     this.distGain.gain.setTargetAtTime(g, t, 0.02);
     this.shaper.curve = makeDistortionCurve('metal_zone', this.params.dist);
 
@@ -1233,9 +1254,9 @@ class JB2AngryDriverPedal extends BasePedal {
 
   applyParams() {
     const t = this.ctx.currentTime;
-    const g = 1.0 + (this.params.drive / 100) * 18.0;
+    const g = 2.5 + (this.params.drive / 100) * 85.0;
     this.bossDrive.gain.setTargetAtTime(g, t, 0.02);
-    this.jhsDrive.gain.setTargetAtTime(g * 1.35, t, 0.02);
+    this.jhsDrive.gain.setTargetAtTime(g * 1.4, t, 0.02);
 
     this.bossShaper.curve = makeDistortionCurve('fet', this.params.drive);
     this.jhsShaper.curve = makeDistortionCurve('jhs_angry', this.params.drive);
@@ -1405,7 +1426,7 @@ class SD2DualOverdrivePedal extends BasePedal {
   applyParams() {
     const t = this.ctx.currentTime;
     const isLead = this.params.mode === 'lead';
-    const g = 1.0 + (this.params.drive / 100) * (isLead ? 22.0 : 9.0);
+    const g = 2.0 + (this.params.drive / 100) * (isLead ? 90.0 : 45.0);
     this.driveGain.gain.setTargetAtTime(g, t, 0.02);
     this.shaper.curve = makeDistortionCurve(isLead ? 'hard' : 'asymmetric', this.params.drive);
 
@@ -1598,7 +1619,7 @@ class OD1XOverdrivePedal extends BasePedal {
 
   applyParams() {
     const t = this.ctx.currentTime;
-    const drv = 1.0 + (this.params.drive / 100) * 16.0;
+    const drv = 2.5 + (this.params.drive / 100) * 85.0;
     this.lowGain.gain.setTargetAtTime(drv * 0.9, t, 0.02);
     this.highGain.gain.setTargetAtTime(drv * 1.3, t, 0.02);
 
@@ -1815,13 +1836,13 @@ class IbanezTS9Pedal extends BasePedal {
 
   _setupGraph() {
     this.subCutFilter.type = 'highpass';
-    this.subCutFilter.frequency.setValueAtTime(720, this.ctx.currentTime);
+    this.subCutFilter.frequency.setValueAtTime(75, this.ctx.currentTime);
     this.subCutFilter.Q.setValueAtTime(0.7, this.ctx.currentTime);
 
     this.midHumpFilter.type = 'peaking';
     this.midHumpFilter.frequency.setValueAtTime(723, this.ctx.currentTime);
     this.midHumpFilter.Q.setValueAtTime(1.4, this.ctx.currentTime);
-    this.midHumpFilter.gain.setValueAtTime(6.0, this.ctx.currentTime);
+    this.midHumpFilter.gain.setValueAtTime(6.5, this.ctx.currentTime);
 
     this.shaper.oversample = '4x';
     this.toneFilter.type = 'lowpass';
@@ -1837,7 +1858,7 @@ class IbanezTS9Pedal extends BasePedal {
 
   applyParams() {
     const t = this.ctx.currentTime;
-    const d = 1.0 + (this.params.drive / 100) * 14.0;
+    const d = 2.0 + (this.params.drive / 100) * 65.0;
     this.driveGain.gain.setTargetAtTime(d, t, 0.02);
     this.shaper.curve = makeDistortionCurve('tubescreamer', this.params.drive);
 
@@ -1907,7 +1928,7 @@ class EHXBigMuffPedal extends BasePedal {
 
   applyParams() {
     const t = this.ctx.currentTime;
-    const sust = 1.0 + (this.params.sustain / 100) * 18.0;
+    const sust = 4.0 + (this.params.sustain / 100) * 115.0;
     this.preGain.gain.setTargetAtTime(sust, t, 0.02);
 
     this.stage1Shaper.curve = makeDistortionCurve('bigmuff', this.params.sustain);
@@ -2061,7 +2082,7 @@ class ProCoRat2Pedal extends BasePedal {
 
   applyParams() {
     const t = this.ctx.currentTime;
-    const d = 1.0 + (this.params.dist / 100) * 16.0;
+    const d = 3.0 + (this.params.dist / 100) * 95.0;
     this.distGain.gain.setTargetAtTime(d, t, 0.02);
     this.shaper.curve = makeDistortionCurve('rat', this.params.dist);
 

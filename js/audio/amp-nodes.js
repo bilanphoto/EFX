@@ -295,12 +295,12 @@ class MarshallDSL20Amp extends BaseAmp {
     const isUltra = this.params.channel === 'ultra';
 
     if (isUltra) {
-      const g = 1.0 + (this.params.ultra_gain / 100) * 22.0;
+      const g = 2.0 + (this.params.ultra_gain / 100) * 38.0;
       this.ultraGainNode.gain.setTargetAtTime(g, t, 0.02);
       this.ultraShaper.curve = makeTubeCurve('12ax7', 2.0 + (this.params.ultra_gain / 100) * 3.5);
       this.classicGainNode.gain.setTargetAtTime(0.0, t, 0.02);
     } else {
-      const g = 1.0 + (this.params.classic_gain / 100) * 8.0;
+      const g = 1.5 + (this.params.classic_gain / 100) * 16.0;
       this.classicGainNode.gain.setTargetAtTime(g, t, 0.02);
       this.classicShaper.curve = makeTubeCurve('12ax7', 1.2 + (this.params.classic_gain / 100) * 2.0);
       this.ultraGainNode.gain.setTargetAtTime(0.0, t, 0.02);
@@ -495,7 +495,7 @@ class MarshallJCM800Amp extends BaseAmp {
 
   applyParams() {
     const t = this.ctx.currentTime;
-    const g = 1.0 + (this.params.gain / 100) * 16.0;
+    const g = 2.0 + (this.params.gain / 100) * 35.0;
     this.preGain.gain.setTargetAtTime(g, t, 0.02);
 
     this.tubeStage1.curve = makeTubeCurve('12ax7', 1.2 + (this.params.gain / 100) * 3.0);
@@ -607,10 +607,10 @@ class VoxAC30Amp extends BaseAmp {
   applyParams() {
     const t = this.ctx.currentTime;
 
-    const normG = (this.params.normalVol / 100) * 3.5;
+    const normG = (this.params.normalVol / 100) * 7.0;
     this.normalGain.gain.setTargetAtTime(normG, t, 0.02);
 
-    const tbG = (this.params.topBoostVol / 100) * 5.0;
+    const tbG = (this.params.topBoostVol / 100) * 11.0;
     this.topBoostGain.gain.setTargetAtTime(tbG, t, 0.02);
 
     const totalDrive = (this.params.normalVol * 0.4 + this.params.topBoostVol * 0.8) / 100;
@@ -705,7 +705,7 @@ class MesaDualRectifierAmp extends BaseAmp {
     this.sagCompressor.knee.setValueAtTime(12, this.ctx.currentTime);
     this.sagCompressor.ratio.setValueAtTime(6, this.ctx.currentTime);
     this.sagCompressor.attack.setValueAtTime(0.015, this.ctx.currentTime);
-    this.sagCompressor.release.setValueAtTime(0.08, this.ctx.currentTime);
+    this.sagCompressor.release.setValueAtTime(0.18, this.ctx.currentTime);
 
     // Mesa Tone Stack
     this.bassFilter.type = 'lowshelf';
@@ -747,7 +747,7 @@ class MesaDualRectifierAmp extends BaseAmp {
 
   applyParams() {
     const t = this.ctx.currentTime;
-    const g = 1.0 + (this.params.gain / 100) * 20.0;
+    const g = 2.0 + (this.params.gain / 100) * 45.0;
     this.preGain.gain.setTargetAtTime(g, t, 0.02);
 
     this.tubeStage1.curve = makeTubeCurve('12ax7', 1.5 + (this.params.gain / 100) * 3.5);
@@ -861,7 +861,7 @@ class OrangeRockerverbAmp extends BaseAmp {
 
   applyParams() {
     const t = this.ctx.currentTime;
-    const g = 1.0 + (this.params.gain / 100) * 18.0;
+    const g = 2.0 + (this.params.gain / 100) * 40.0;
     this.preGain.gain.setTargetAtTime(g, t, 0.02);
 
     this.dirtyTube1.curve = makeTubeCurve('orange_tube', 1.4 + (this.params.gain / 100) * 3.5);

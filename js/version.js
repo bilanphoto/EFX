@@ -5,10 +5,23 @@
 (function(window) {
   'use strict';
 
-  const DEFAULT_VERSION = 'V1.1.2';
+  const DEFAULT_VERSION = 'V1.1.3';
   const APP_NAME = 'VINTAGE RIG PRO GUITAR STUDIO';
 
   const CHANGELOG = [
+    {
+      version: 'V1.1.3',
+      date: '2026-10-11',
+      title: 'Natural Guitar Sustain Engine & Roaring High-Gain Distortion Restored',
+      items: [
+        'แก้ปัญหาเสียงไม่คงที่ วอลุมวูบวาบเหมือนคนหมุนปุ่มเสียงขึ้นๆ ลงๆ (Master Limiter Pumping & Flutter Fix): ปรับปรุง Master Dynamics Compressor จากเดิมที่บีบอัดเสียงแบบกระตุก (Hard Knee 20:1, Release 50ms) ให้เป็น Master Transparent Compressor สไตล์สตูดิโอ (Soft Knee 12dB, Release 250ms พร้อม Soft Ceiling Waveshaper 0.92) หางเสียงยาวต่อเนื่องราบเรียบ ไม่สั่นสะเทือนหรือแกว่งไปมา',
+        'แก้ปัญหาก้อนเสียงแตกไม่มีเสียงแตกเลย (Zero Distortion Fix): แก้ไขวงจร Pre-Filter ของก้อนเอฟเฟคเสียงแตก (Boss DS-1, DS-2, OS-2, Ibanez TS9, ProCo Rat 2, Big Muff ฯลฯ) ที่เดิมตั้ง Highpass Filter สูงถึง 400Hz-720Hz ทำให้เสียงโน้ตสายล่าง (Low E 82Hz - D 147Hz) ถูกตัดหายไปจนสัญญาณไม่ถึงจุดคลิปปิ้ง โดยปรับลดลงมาที่ Subsonic 75Hz ให้เนื้อเสียงกีตาร์ผ่านเข้าสู่จุดอิ่มตัวได้ 100%',
+        'เพิ่มพลังเกน Drive/Distortion ของก้อนเสียงแตกทุกตัว: ขยายตัวคูณเกนขยายสัญญาณเข้าภาค Clipping Diodes และ Waveshaper ให้สมจริงเทียบเท่าวงจรเหยียบจริง เสียงแตกดุดัน หนา แน่น หวานฉ่ำ เมื่อดีดเบา-ดีดหนัก ตอบสนองตามน้ำหนักมือ (Touch Dynamics)',
+        'เพิ่มระบบ Instrument Preamp Normalization (+12dB / +18dB Boost): สัญญาณกีตาร์จาก Audio Interface (Hi-Z Input) จะถูกปรับขยายให้มีระดับความแรงสมดุลในระดับสตูดิโอ (+12dB เป็นค่าเริ่มต้น) ทำให้เอฟเฟคและตู้แอมป์ทำงานในจุด Sweet Spot ทันที',
+        'ปรับปรุง Noise Gate (Boss NS-2): เพิ่มระบบ Hold Time 120ms และ Hysteresis 3.5dB ป้องกันประตูกลั้นเสียงสับกระพริบขณะหางเสียงกีตาร์ค่อยๆ เบาลง ช่วยให้โน้ตลากยาวได้นาน 5-8 วินาทีขึ้นไปอย่างนุ่มนวล',
+        'เพิ่มคำแนะนำการตั้งค่าไมโครโฟนสำหรับผู้ใช้ macOS: แสดงแถบแจ้งเตือนเมื่อเปิดใช้งาน GUITAR IN บน Mac เพื่อแนะนำให้ปรับโหมดไมค์จาก "Voice Isolation (แยกเสียงพูด)" เป็น "Standard (มาตรฐาน)" เพื่อป้องกันไม่ให้ระบบตัดเสียงรบกวนของ Mac ตัดเสียงหางกีตาร์'
+      ]
+    },
     {
       version: 'V1.1.2',
       date: '2026-10-11',
